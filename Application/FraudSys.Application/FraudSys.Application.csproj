@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Command\AtualizarLimite\" />
+      <Folder Include="Command\RemoverLimite\" />
+      <Folder Include="Query\BusacarLimite\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Domain\FraudSys.Domain\FraudSys.Domain.csproj" />
+    </ItemGroup>
+
+</Project>
