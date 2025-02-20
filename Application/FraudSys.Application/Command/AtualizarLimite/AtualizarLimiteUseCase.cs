@@ -20,12 +20,12 @@ public class AtualizarLimiteUseCase : ICommand<AtualizarLimiteInput, AtualizarLi
     }
 
     public async Task<AtualizarLimiteOutput> Execute(
-        AtualizarLimiteInput request,
+        AtualizarLimiteInput input,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Atualizando limite para o cliente {Documento}.", request.Documento);
+        _logger.LogInformation("Atualizando limite para o cliente {Documento}.", input.Documento);
 
-        var limiteCliente = await _limiteClienteRepository.GetByIdAsync(request.Documento, cancellationToken);
+        var limiteCliente = await _limiteClienteRepository.GetByIdAsync(input.Documento, cancellationToken);
 
         if (limiteCliente == null)
         {
@@ -37,7 +37,7 @@ public class AtualizarLimiteUseCase : ICommand<AtualizarLimiteInput, AtualizarLi
             );
         }
 
-        if (! _validator.Validate(request.NovoLimite))
+        if (! _validator.Validate(input.NovoLimite))
         {
             _logger.LogError("Requisição inválida.");
 
@@ -47,7 +47,7 @@ public class AtualizarLimiteUseCase : ICommand<AtualizarLimiteInput, AtualizarLi
             );
         }
 
-        limiteCliente.AtualizarLimite(request.NovoLimite);
+        limiteCliente.AtualizarLimite(input.NovoLimite);
 
         await _limiteClienteRepository.UpdateAsync(limiteCliente, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
