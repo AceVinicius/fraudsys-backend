@@ -6,11 +6,7 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <ItemGroup>
-      <Folder Include="Command\RemoverLimite\" />
       <Folder Include="Query\BusacarLimite\" />
-    </ItemGroup>
-
     <ItemGroup>
       <ProjectReference Include="..\..\Domain\FraudSys.Domain\FraudSys.Domain.csproj" />
     </ItemGroup>

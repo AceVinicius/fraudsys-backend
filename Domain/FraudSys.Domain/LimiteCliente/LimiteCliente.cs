@@ -2,10 +2,10 @@ namespace FraudSys.Domain.LimiteCliente;
 
 public class LimiteCliente
 {
-    private string Documento { get; set; }
-    private string NumeroAgencia { get; set; }
-    private string NumeroConta { get; set; }
-    private decimal LimiteTransacao { get; set; }
+    public string Documento { get; private set; }
+    public string NumeroAgencia { get; private set; }
+    public string NumeroConta { get; private set; }
+    public decimal LimiteTransacao { get; private set; }
 
     public  LimiteCliente(string documento, string numeroAgencia, string numeroConta, decimal
             limiteTransacao)
