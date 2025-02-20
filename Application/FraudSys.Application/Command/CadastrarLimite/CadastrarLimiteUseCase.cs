@@ -4,13 +4,13 @@ public class CadastrarLimiteUseCase : ICommand<CadastrarLimiteInput, CadastrarLi
 {
     private readonly ILogger<CadastrarLimiteUseCase> _logger;
     private readonly ILimiteClienteRepository _limiteClienteRepository;
-    private readonly ILimiteClienteValidator _limiteClienteValidator;
+    private readonly ICadastrarLimiteClienteValidator _limiteClienteValidator;
     private readonly IUnitOfWork _unitOfWork;
 
     public CadastrarLimiteUseCase(
         ILogger<CadastrarLimiteUseCase> logger,
         ILimiteClienteRepository limiteClienteRepository,
-        ILimiteClienteValidator limiteClienteValidator,
+        ICadastrarLimiteClienteValidator limiteClienteValidator,
         IUnitOfWork unitOfWork)
     {
         _logger = logger;

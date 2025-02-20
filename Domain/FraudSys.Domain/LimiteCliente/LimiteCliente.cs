@@ -16,7 +16,7 @@ public class LimiteCliente
         LimiteTransacao = limiteTransacao;
     }
 
-    public void CadastrarLimite(decimal limiteTransacao)
+    public void AtualizarLimite(decimal limiteTransacao)
     {
         if (limiteTransacao <= 0)
         {
@@ -24,10 +24,5 @@ public class LimiteCliente
         }
 
         LimiteTransacao = limiteTransacao;
-    }
-
-    public void AtualizarLimites(decimal limiteTransacao)
-    {
-        CadastrarLimite(limiteTransacao);
     }
 }

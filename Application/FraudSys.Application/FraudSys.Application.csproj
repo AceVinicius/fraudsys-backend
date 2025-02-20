@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Command\AtualizarLimite\" />
       <Folder Include="Command\RemoverLimite\" />
       <Folder Include="Query\BusacarLimite\" />
     </ItemGroup>

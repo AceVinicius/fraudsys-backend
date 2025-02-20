@@ -1,6 +1,6 @@
 namespace FraudSys.Domain.LimiteCliente.Validator;
 
-public class LimiteClienteValidator : ILimiteClienteValidator
+public class CadastrarLimiteClienteValidator : ICadastrarLimiteClienteValidator
 {
     public bool Validate(string documento, string numeroAgencia, string numeroConta, decimal limiteTransacao)
     {
@@ -19,7 +19,7 @@ public class LimiteClienteValidator : ILimiteClienteValidator
             return false;
         }
 
-        if (limiteTransacao <= 0)
+        if (limiteTransacao < 0)
         {
             return false;
         }
