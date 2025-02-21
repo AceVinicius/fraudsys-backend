@@ -1,17 +1,19 @@
+using FraudSys.Application.Repository;
+
 namespace FraudSys.Application.Command.RemoverLimite;
 
-public class RemoverLimiteUseCase : ICommand<RemoverLimiteInput, RemoverLimiteOutput>
+public class RemoverLimiteUseCase : IRemoverLimiteUseCase
 {
-    private readonly Logger<RemoverLimiteUseCase> _logger;
+    private readonly IAppLogger<RemoverLimiteUseCase> _appLogger;
     private readonly ILimiteClienteRepository _limiteClienteRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public RemoverLimiteUseCase(
-        Logger<RemoverLimiteUseCase> logger,
+        IAppLogger<RemoverLimiteUseCase> appLogger,
         ILimiteClienteRepository limiteClienteRepository,
         IUnitOfWork unitOfWork)
     {
-        _logger = logger;
+        _appLogger = appLogger;
         _limiteClienteRepository = limiteClienteRepository;
         _unitOfWork = unitOfWork;
     }
@@ -20,7 +22,7 @@ public class RemoverLimiteUseCase : ICommand<RemoverLimiteInput, RemoverLimiteOu
         RemoverLimiteInput input,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Removendo limiteCliente");
+        _appLogger.LogInformation("Removendo limiteCliente");
 
         var limiteCliente = await _limiteClienteRepository.GetByIdAsync(
             input.Documento,
@@ -28,7 +30,7 @@ public class RemoverLimiteUseCase : ICommand<RemoverLimiteInput, RemoverLimiteOu
 
         if (limiteCliente == null)
         {
-            _logger.LogError("O limiteCliente não foi encontrado");
+            _appLogger.LogError("O limiteCliente não foi encontrado");
 
             return new RemoverLimiteOutput(
                 false,
@@ -36,12 +38,12 @@ public class RemoverLimiteUseCase : ICommand<RemoverLimiteInput, RemoverLimiteOu
             );
         }
 
-        _logger.LogInformation("O limiteCliente foi encontrado");
+        _appLogger.LogInformation("O limiteCliente foi encontrado");
 
         await _limiteClienteRepository.DeleteAsync(limiteCliente.Documento, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        _logger.LogInformation("Limite removido com sucesso");
+        _appLogger.LogInformation("Limite removido com sucesso");
 
         return new RemoverLimiteOutput(
             true,

@@ -1,4 +1,4 @@
-namespace FraudSys.Application.SeedWork;
+namespace FraudSys.Application.Repository;
 
 public interface IUnitOfWork
 {

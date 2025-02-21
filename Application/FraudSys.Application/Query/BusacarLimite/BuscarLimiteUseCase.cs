@@ -1,22 +1,24 @@
+using FraudSys.Application.Repository;
+
 namespace FraudSys.Application.Query.BusacarLimite;
 
-public class BuscarLimiteUseCase : IQuery<BuscarLimiteInput, BuscarLimiteOutput>
+public class BuscarLimiteUseCase : IBuscarLimiteUseCase
 {
-    private readonly ILogger<BuscarLimiteUseCase> _logger;
+    private readonly IAppLogger<BuscarLimiteUseCase> _appLogger;
     private readonly ILimiteClienteRepository _limiteClienteRepository;
 
     public BuscarLimiteUseCase(
-        ILogger<BuscarLimiteUseCase> logger,
+        IAppLogger<BuscarLimiteUseCase> appLogger,
         ILimiteClienteRepository limiteClienteRepository)
     {
-        _logger = logger;
+        _appLogger = appLogger;
         _limiteClienteRepository = limiteClienteRepository;
     }
 
     public async Task<BuscarLimiteOutput> Execute(BuscarLimiteInput request, CancellationToken
             cancellationToken)
     {
-        _logger.LogInformation("Buscando limiteCliente");
+        _appLogger.LogInformation("Buscando limiteCliente");
 
         var limiteCliente = await _limiteClienteRepository.GetByIdAsync(
             request.Documento,
@@ -24,7 +26,7 @@ public class BuscarLimiteUseCase : IQuery<BuscarLimiteInput, BuscarLimiteOutput>
 
         if (limiteCliente == null)
         {
-            _logger.LogError("O limiteCliente não foi encontrado");
+            _appLogger.LogError("O limiteCliente não foi encontrado");
 
             return new BuscarLimiteOutput(
                 "",
@@ -34,7 +36,7 @@ public class BuscarLimiteUseCase : IQuery<BuscarLimiteInput, BuscarLimiteOutput>
             );
         }
 
-        _logger.LogInformation("O limiteCliente foi encontrado");
+        _appLogger.LogInformation("O limiteCliente foi encontrado");
 
         return new BuscarLimiteOutput(
             limiteCliente.Documento,

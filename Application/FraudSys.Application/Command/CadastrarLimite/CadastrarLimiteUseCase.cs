@@ -1,19 +1,21 @@
+using FraudSys.Application.Repository;
+
 namespace FraudSys.Application.Command.CadastrarLimite;
 
-public class CadastrarLimiteUseCase : ICommand<CadastrarLimiteInput, CadastrarLimiteOutput>
+public class CadastrarLimiteUseCase : ICadastrarLimiteUseCase
 {
-    private readonly ILogger<CadastrarLimiteUseCase> _logger;
+    private readonly IAppLogger<CadastrarLimiteUseCase> _appLogger;
     private readonly ILimiteClienteRepository _limiteClienteRepository;
     private readonly ICadastrarLimiteClienteValidator _limiteClienteValidator;
     private readonly IUnitOfWork _unitOfWork;
 
     public CadastrarLimiteUseCase(
-        ILogger<CadastrarLimiteUseCase> logger,
+        IAppLogger<CadastrarLimiteUseCase> appLogger,
         ILimiteClienteRepository limiteClienteRepository,
         ICadastrarLimiteClienteValidator limiteClienteValidator,
         IUnitOfWork unitOfWork)
     {
-        _logger = logger;
+        _appLogger = appLogger;
         _limiteClienteRepository = limiteClienteRepository;
         _limiteClienteValidator = limiteClienteValidator;
         _unitOfWork = unitOfWork;
@@ -23,11 +25,11 @@ public class CadastrarLimiteUseCase : ICommand<CadastrarLimiteInput, CadastrarLi
         CadastrarLimiteInput input,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Cadastrando limite para o cliente {Documento}.", input.Documento);
+        _appLogger.LogInformation($"Cadastrando limite para o cliente {input.Documento}.");
 
         if (await _limiteClienteRepository.GetByIdAsync(input.Documento, cancellationToken) != null)
         {
-            _logger.LogError("LimiteCliente já possui limite cadastrado.");
+            _appLogger.LogError("LimiteCliente já possui limite cadastrado.");
 
             return new CadastrarLimiteOutput(
                 false,
@@ -35,7 +37,7 @@ public class CadastrarLimiteUseCase : ICommand<CadastrarLimiteInput, CadastrarLi
             );
         }
 
-        _logger.LogInformation("LimiteCliente não possui limite cadastrado.");
+        _appLogger.LogInformation("LimiteCliente não possui limite cadastrado.");
 
         if (!_limiteClienteValidator.Validate(
                 input.Documento,
@@ -44,7 +46,7 @@ public class CadastrarLimiteUseCase : ICommand<CadastrarLimiteInput, CadastrarLi
                 input.LimiteTransacao)
             )
         {
-            _logger.LogError("Documento, agência e conta devem ser informados.");
+            _appLogger.LogError("Documento, agência e conta devem ser informados.");
 
             return new CadastrarLimiteOutput(
                 false,
@@ -58,15 +60,12 @@ public class CadastrarLimiteUseCase : ICommand<CadastrarLimiteInput, CadastrarLi
             input.NumeroConta,
             input.LimiteTransacao);
 
-        _logger.LogInformation(
-            "Criando limite de {LimiteTransacao} para o cliente {Documento}.",
-            input.LimiteTransacao,
-            input.Documento);
+        _appLogger.LogInformation($"Criando limite de {input.LimiteTransacao} para o cliente {input.Documento}.");
 
         await _limiteClienteRepository.CreateAsync(limiteCliente, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        _logger.LogInformation("Limite cadastrado com sucesso.");
+        _appLogger.LogInformation("Limite cadastrado com sucesso.");
 
         return new CadastrarLimiteOutput(
             true,

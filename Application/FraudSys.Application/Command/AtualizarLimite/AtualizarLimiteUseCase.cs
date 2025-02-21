@@ -1,19 +1,21 @@
+using FraudSys.Application.Repository;
+
 namespace FraudSys.Application.Command.AtualizarLimite;
 
-public class AtualizarLimiteUseCase : ICommand<AtualizarLimiteInput, AtualizarLimiteOutput>
+public class AtualizarLimiteUseCase : IAtualizarLimiteUseCase
 {
-    private readonly ILogger<AtualizarLimiteUseCase> _logger;
+    private readonly IAppLogger<AtualizarLimiteUseCase> _appLogger;
     private readonly ILimiteClienteRepository _limiteClienteRepository;
     private readonly IAtualizarLimiteClienteValidator _validator;
     private readonly IUnitOfWork _unitOfWork;
 
     public AtualizarLimiteUseCase(
-        ILogger<AtualizarLimiteUseCase> logger,
+        IAppLogger<AtualizarLimiteUseCase> appLogger,
         ILimiteClienteRepository limiteClienteRepository,
         IAtualizarLimiteClienteValidator validator,
         IUnitOfWork unitOfWork)
     {
-        _logger = logger;
+        _appLogger = appLogger;
         _limiteClienteRepository = limiteClienteRepository;
         _validator = validator;
         _unitOfWork = unitOfWork;
@@ -23,13 +25,13 @@ public class AtualizarLimiteUseCase : ICommand<AtualizarLimiteInput, AtualizarLi
         AtualizarLimiteInput input,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Atualizando limite para o cliente {Documento}.", input.Documento);
+        _appLogger.LogInformation($"Atualizando limite para o cliente {input.Documento}.");
 
         var limiteCliente = await _limiteClienteRepository.GetByIdAsync(input.Documento, cancellationToken);
 
         if (limiteCliente == null)
         {
-            _logger.LogError("LimiteCliente não encontrado.");
+            _appLogger.LogError("LimiteCliente não encontrado.");
 
             return new AtualizarLimiteOutput(
                 Success: false,
@@ -39,7 +41,7 @@ public class AtualizarLimiteUseCase : ICommand<AtualizarLimiteInput, AtualizarLi
 
         if (! _validator.Validate(input.NovoLimite))
         {
-            _logger.LogError("Requisição inválida.");
+            _appLogger.LogError("Requisição inválida.");
 
             return new AtualizarLimiteOutput(
                 Success: false,
@@ -52,7 +54,7 @@ public class AtualizarLimiteUseCase : ICommand<AtualizarLimiteInput, AtualizarLi
         await _limiteClienteRepository.UpdateAsync(limiteCliente, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        _logger.LogInformation("Limite atualizado com sucesso.");
+        _appLogger.LogInformation("Limite atualizado com sucesso.");
 
         return new AtualizarLimiteOutput(
             Success: true,
