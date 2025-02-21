@@ -34,7 +34,7 @@ public class LimiteClienteEntity
 
     public void Debitar(decimal valorDebito)
     {
-        if (valorDebito < 0)
+        if (valorDebito <= 0)
         {
             throw new TransactionException("O valor da transação deve ser maior que 0.");
         }
@@ -49,7 +49,7 @@ public class LimiteClienteEntity
 
     public void Creditar(decimal valorCredito)
     {
-        if (valorCredito < 0)
+        if (valorCredito <= 0)
         {
             throw new TransactionException("O valor da transação deve ser maior que 0.");
         }

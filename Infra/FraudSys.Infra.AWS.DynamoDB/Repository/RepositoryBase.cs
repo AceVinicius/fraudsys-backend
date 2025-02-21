@@ -166,9 +166,11 @@ public abstract class RepositoryBase<TRepository, TEntity, TModel, TId> : IRepos
 
     protected static async Task<T> ExecuteWithExceptionHandling<T>(Func<Task<T>> action)
     {
+        return await action();
+
         try
         {
-            return await action();
+
         }
         catch (System.Exception ex)
         {

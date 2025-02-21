@@ -2,7 +2,7 @@ using System.Globalization;
 
 namespace FraudSys.Infra.AWS.DynamoDB.Configuration;
 
-[DynamoDBTable("LimiteClientesTable")]
+[DynamoDBTable("LimiteClienteTable")]
 public class LimiteClienteModel : IModel<LimiteClienteModel, LimiteClienteEntity, string>
 {
     [DynamoDBHashKey]

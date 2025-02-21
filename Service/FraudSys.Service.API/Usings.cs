@@ -1,3 +1,5 @@
+global using Amazon.Extensions.NETCore.Setup;
+
 global using FraudSys.Application.Command.AtualizarLimite;
 global using FraudSys.Application.Command.CadastrarLimite;
 global using FraudSys.Application.Command.RemoverLimite;

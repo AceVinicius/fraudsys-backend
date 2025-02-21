@@ -1,6 +1,7 @@
 global using Amazon.DynamoDBv2;
 global using Amazon.DynamoDBv2.DataModel;
 global using Amazon.DynamoDBv2.Model;
+global using Amazon.Extensions.NETCore.Setup;
 
 global using FraudSys.Application.Repository;
 global using FraudSys.Domain.LimiteCliente;

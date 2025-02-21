@@ -1,6 +1,3 @@
-using Amazon.Extensions.NETCore.Setup;
-using FraudSys.Domain.Transacao.Repository;
-
 namespace FraudSys.Infra.AWS.DynamoDB.IoC;
 
 public static class DynamoDbExtensions
@@ -25,8 +22,8 @@ public static class DynamoDbExtensions
 
     private static void CreateTablesIfNotExists(AWSOptions options)
     {
-        const string tableLimiteClienteName = "LimiteClienteEntity";
-        const string tableTransacaoName = "TransacaoEntity";
+        const string tableLimiteClienteName = "LimiteClienteTable";
+        const string tableTransacaoName = "TransacaoTable";
 
         var client = new AmazonDynamoDBClient(options.Region);
 

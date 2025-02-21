@@ -1,5 +1,3 @@
-using System.Globalization;
-
 namespace FraudSys.Infra.AWS.DynamoDB.Repository;
 
 public class LimiteClienteRepository : RepositoryBase<
@@ -11,7 +9,7 @@ public class LimiteClienteRepository : RepositoryBase<
 {
     public LimiteClienteRepository(
         IAppLogger<LimiteClienteRepository> appLogger, IAmazonDynamoDB client, IUnitOfWork unitOfWork)
-        : base(appLogger, client, unitOfWork, "LimiteClientesTable")
+        : base(appLogger, client, unitOfWork, "LimiteClienteTable")
     {
     }
 

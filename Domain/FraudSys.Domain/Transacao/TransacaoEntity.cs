@@ -17,10 +17,16 @@ public class TransacaoEntity
         decimal valor)
     {
         Id = Guid.NewGuid();
+        Status = StatusTransacao.Pendente;
         LimiteClientePagador = limiteClientePagador;
         LimiteClienteRecebedor = limiteClienteRecebedor;
+
+        if (valor <= 0)
+        {
+            throw new EntityCreationException("Valor da transação deve ser maior que zero.");
+        }
+
         Valor = valor;
-        Status = StatusTransacao.Pendente;
     }
 
     public TransacaoEntity(
@@ -45,12 +51,13 @@ public class TransacaoEntity
 
         try
         {
-            LimiteClienteRecebedor.Debitar(Valor);
-            LimiteClientePagador.Creditar(Valor);
+            LimiteClientePagador.Debitar(Valor);
+            LimiteClienteRecebedor.Creditar(Valor);
         }
         catch (TransactionException e)
         {
             Status = StatusTransacao.Rejeitada;
+            return;
         }
 
         Status = StatusTransacao.Aprovada;
