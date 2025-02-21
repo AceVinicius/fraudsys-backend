@@ -1,13 +1,10 @@
-using Amazon.DynamoDBv2.DataModel;
-using Amazon.DynamoDBv2.DocumentModel;
-
 namespace FraudSys.Infra.AWS.DynamoDB.Repository;
 
 public class LimiteClienteRepository : ILimiteClienteRepository
 {
-    private readonly DynamoDBContext _dynamoDbContext;
+    private readonly IDynamoDBContext _dynamoDbContext;
 
-    public LimiteClienteRepository(DynamoDBContext dynamoDbContext)
+    public LimiteClienteRepository(IDynamoDBContext dynamoDbContext)
     {
         _dynamoDbContext = dynamoDbContext;
     }

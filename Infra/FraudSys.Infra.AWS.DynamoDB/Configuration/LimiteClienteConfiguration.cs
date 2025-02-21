@@ -1,5 +1,3 @@
-using Amazon.DynamoDBv2.DataModel;
-
 namespace FraudSys.Infra.AWS.DynamoDB.Configuration;
 
 [DynamoDBTable("LimiteClientesTable")]
@@ -16,6 +14,10 @@ public class LimiteClienteModel
 
     [DynamoDBProperty]
     public decimal LimiteTransacao { get; set; }
+
+    public LimiteClienteModel()
+    {
+    }
 
     public LimiteClienteModel(
         string documento,
