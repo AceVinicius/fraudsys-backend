@@ -1,3 +1,5 @@
+using FraudSys.Domain.Transacao.Validator;
+
 namespace FraudSys.Service.API.Configuration;
 
 public static class ApplicationConfiguration
@@ -31,6 +33,7 @@ public static class ApplicationConfiguration
     private static void AddDomainDependencies(this IServiceCollection services)
     {
         // Facades
-        services.AddSingleton<ILimiteClienteValidatorFacade, LimiteClienteValidatorFacade>();
+        services.AddScoped<ILimiteClienteValidatorFacade, LimiteClienteValidatorFacade>();
+        services.AddScoped<ITransacaoValidatorFacade, TransacaoValidatorFacade>();
     }
 }

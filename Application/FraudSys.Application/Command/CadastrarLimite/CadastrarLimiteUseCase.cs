@@ -27,22 +27,13 @@ public class CadastrarLimiteUseCase : ICadastrarLimiteUseCase
     {
         _appLogger.LogInformation($"Cadastrando limite para o cliente {input.Documento}.");
 
-        if (await _limiteClienteRepository.ExistsAsync(input.Documento, cancellationToken))
-        {
-            _appLogger.LogError("LimiteCliente já possui limite cadastrado.");
-
-            throw new System.Exception();
-        }
-
-        _appLogger.LogInformation("LimiteCliente não possui limite cadastrado.");
-
         _validatorFacade.ValidateCriacaoLimiteCliente(
             input.Documento,
             input.NumeroAgencia,
             input.NumeroConta,
             input.LimiteTransacao);
 
-        var limiteCliente = new LimiteCliente(
+        var limiteCliente = new LimiteClienteEntity(
             input.Documento,
             input.NumeroAgencia,
             input.NumeroConta,

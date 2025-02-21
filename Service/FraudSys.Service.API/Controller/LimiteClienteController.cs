@@ -1,16 +1,17 @@
 namespace FraudSys.Service.API.Controller;
 
 [ApiController]
-[Route("limiteCliente")]
+[Route("limiteClienteEntity")]
 public class LimiteClienteController : ControllerBase
 {
-    private readonly Application.Repository.IAppLogger<LimiteClienteController> _appLogger;
+    private readonly IAppLogger<LimiteClienteController> _appLogger;
     private readonly ICadastrarLimiteUseCase _cadastrarLimiteUseCase;
     private readonly IAtualizarLimiteUseCase _atualizarLimiteUseCase;
     private readonly IRemoverLimiteUseCase _removerLimiteUseCase;
     private readonly IBuscarLimiteUseCase _buscarLimiteUseCase;
 
-    public LimiteClienteController(Application.Repository.IAppLogger<LimiteClienteController> appLogger,
+    public LimiteClienteController(
+        IAppLogger<LimiteClienteController> appLogger,
         ICadastrarLimiteUseCase cadastrarLimiteUseCase,
         IAtualizarLimiteUseCase atualizarLimiteUseCase,
         IRemoverLimiteUseCase removerLimiteUseCase,

@@ -1,4 +1,5 @@
 using Amazon.Extensions.NETCore.Setup;
+using FraudSys.Domain.Transacao.Repository;
 
 namespace FraudSys.Infra.AWS.DynamoDB.IoC;
 
@@ -8,29 +9,38 @@ public static class DynamoDbExtensions
     {
         var awsOptions = configuration.GetAWSOptions();
 
-        CreateTableIfNotExists(awsOptions);
+        CreateTablesIfNotExists(awsOptions);
 
         // DynamoDB
         services.AddDefaultAWSOptions(awsOptions);
         services.AddAWSService<IAmazonDynamoDB>();
-        services.AddSingleton<IDynamoDBContext, DynamoDBContext>();
 
         // Domain Repositories
-        services.AddSingleton<ILimiteClienteRepository, LimiteClienteRepository>();
+        services.AddScoped<ILimiteClienteRepository, LimiteClienteRepository>();
+        services.AddScoped<ITransacaoRepository, TransacaoRepository>();
 
         // Application Repositories
-        services.AddSingleton<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 
-    private static void CreateTableIfNotExists(AWSOptions options)
+    private static void CreateTablesIfNotExists(AWSOptions options)
     {
-        const string tableName = "LimiteCliente";
-        var client = new AmazonDynamoDBClient(options.Region);
-        var tableExists = DoesTableExistAsync(client, tableName).Result;
+        const string tableLimiteClienteName = "LimiteClienteEntity";
+        const string tableTransacaoName = "TransacaoEntity";
 
-        if (!tableExists)
+        var client = new AmazonDynamoDBClient(options.Region);
+
+        var tableLimiteClienteExists = DoesTableExistAsync(client, tableLimiteClienteName).Result;
+        var tableTransacaoExists = DoesTableExistAsync(client, tableTransacaoName).Result;
+
+        if (!tableLimiteClienteExists)
         {
-            InitTable(client, tableName);
+            InitLimiteClienteTable(client, tableLimiteClienteName);
+        }
+
+        if (!tableTransacaoExists)
+        {
+            InitTransacaoTable(client, tableTransacaoName);
         }
     }
 
@@ -49,14 +59,14 @@ public static class DynamoDbExtensions
         }
         catch (System.Exception ex)
         {
-            Console.WriteLine($"Error checking if table exists: {ex.Message}");
+            Console.WriteLine($"Erro ao verificar se tabela '{tableName}' existe no DynamoDB: {ex.Message}");
             return false;
         }
 
         return true;
     }
 
-    private static void InitTable(AmazonDynamoDBClient client, string tableName)
+    private static void InitLimiteClienteTable(AmazonDynamoDBClient client, string tableName)
     {
         var request = new CreateTableRequest
         {
@@ -84,14 +94,53 @@ public static class DynamoDbExtensions
             }
         };
 
+        InitTable(client, request, tableName);
+    }
+
+    private static void InitTransacaoTable(AmazonDynamoDBClient client, string tableName)
+    {
+        var request = new CreateTableRequest
+        {
+            TableName = tableName,
+            KeySchema =
+            [
+                new KeySchemaElement
+                {
+                    AttributeName = "Id",
+                    KeyType = KeyType.HASH,
+                }
+            ],
+            AttributeDefinitions =
+            [
+                new AttributeDefinition
+                {
+                    AttributeName = "Id",
+                    AttributeType = ScalarAttributeType.S
+                }
+            ],
+            ProvisionedThroughput = new ProvisionedThroughput
+            {
+                ReadCapacityUnits = 5,
+                WriteCapacityUnits = 5
+            }
+        };
+
+        InitTable(client, request, tableName);
+    }
+
+    private static void InitTable(
+        AmazonDynamoDBClient client,
+        CreateTableRequest request,
+        string tableName)
+    {
         try
         {
             _ = client.CreateTableAsync(request).Result;
-            Console.WriteLine($"Table {tableName} created successfully!");
+            Console.WriteLine($"Tabela '{tableName}' criada com sucesso!");
         }
         catch (System.Exception ex)
         {
-            Console.WriteLine($"Error creating table: {ex.Message}");
+            Console.WriteLine($"Erro ao criar tabela '{tableName}': {ex.Message}");
         }
     }
 }

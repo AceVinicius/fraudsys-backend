@@ -18,13 +18,13 @@ public class BuscarLimiteUseCase : IBuscarLimiteUseCase
     public async Task<BuscarLimiteOutput> Execute(BuscarLimiteInput request, CancellationToken
             cancellationToken)
     {
-        _appLogger.LogInformation("Buscando limiteCliente");
+        _appLogger.LogInformation("Buscando limiteClienteEntity");
 
         var limiteCliente = await _limiteClienteRepository.GetByIdAsync(
             request.Documento,
             cancellationToken);
 
-        _appLogger.LogInformation("O limiteCliente foi encontrado");
+        _appLogger.LogInformation("O limiteClienteEntity foi encontrado");
 
         return new BuscarLimiteOutput(limiteCliente);
     }

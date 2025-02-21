@@ -7,12 +7,12 @@ public record CadastrarLimiteOutput(
     decimal LimiteTransacao
 )
 {
-    public CadastrarLimiteOutput(LimiteCliente limiteCliente)
+    public CadastrarLimiteOutput(LimiteClienteEntity limiteClienteEntity)
         : this(
-            limiteCliente.Documento,
-            limiteCliente.NumeroAgencia,
-            limiteCliente.NumeroConta,
-            limiteCliente.LimiteTransacao
+            limiteClienteEntity.Documento,
+            limiteClienteEntity.NumeroAgencia,
+            limiteClienteEntity.NumeroConta,
+            limiteClienteEntity.LimiteTransacao
         )
     {
     }

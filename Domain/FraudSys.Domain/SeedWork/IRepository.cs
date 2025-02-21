@@ -2,10 +2,12 @@ namespace FraudSys.Domain.SeedWork;
 
 public interface IRepository<TInput, in TId>
 {
-    public Task<TInput> CreateAsync(TInput input, CancellationToken cancellationToken);
-    public Task<TInput> UpdateAsync(TInput input, CancellationToken cancellationToken);
-    public Task<TInput> DeleteAsync(TId id, CancellationToken cancellationToken);
+    Task CreateAsync(TInput input, CancellationToken cancellationToken);
+    Task UpdateAsync(TInput input, CancellationToken cancellationToken);
+    Task DeleteAsync(TId id, CancellationToken cancellationToken);
 
-    public Task<TInput> GetByIdAsync(TId id, CancellationToken cancellationToken);
-    public Task<IEnumerable<TInput>> GetAllAsync(CancellationToken cancellationToken);
+    Task<bool> ExistsAsync(TId id, CancellationToken cancellationToken);
+
+    Task<TInput> GetByIdAsync(TId id, CancellationToken cancellationToken);
+    Task<IEnumerable<TInput>> GetAllAsync(CancellationToken cancellationToken);
 }

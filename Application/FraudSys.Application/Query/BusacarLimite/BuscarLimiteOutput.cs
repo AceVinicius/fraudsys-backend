@@ -7,12 +7,12 @@ public record BuscarLimiteOutput(
     decimal LimiteTransacao
 )
 {
-    public BuscarLimiteOutput(LimiteCliente limiteCliente)
+    public BuscarLimiteOutput(LimiteClienteEntity limiteClienteEntity)
         : this(
-            limiteCliente.Documento,
-            limiteCliente.NumeroAgencia,
-            limiteCliente.NumeroConta,
-            limiteCliente.LimiteTransacao
+            limiteClienteEntity.Documento,
+            limiteClienteEntity.NumeroAgencia,
+            limiteClienteEntity.NumeroConta,
+            limiteClienteEntity.LimiteTransacao
         )
     {
     }

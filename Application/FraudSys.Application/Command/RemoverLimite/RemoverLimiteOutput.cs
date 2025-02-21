@@ -7,12 +7,12 @@ public record RemoverLimiteOutput(
     decimal LimiteTransacao
 )
 {
-    public RemoverLimiteOutput(LimiteCliente limiteCliente)
+    public RemoverLimiteOutput(LimiteClienteEntity limiteClienteEntity)
         : this(
-            limiteCliente.Documento,
-            limiteCliente.NumeroAgencia,
-            limiteCliente.NumeroConta,
-            limiteCliente.LimiteTransacao
+            limiteClienteEntity.Documento,
+            limiteClienteEntity.NumeroAgencia,
+            limiteClienteEntity.NumeroConta,
+            limiteClienteEntity.LimiteTransacao
         )
     {
     }

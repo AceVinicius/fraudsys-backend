@@ -7,12 +7,12 @@ public record AtualizarLimiteOutput(
     decimal LimiteTransacao
 )
 {
-    public AtualizarLimiteOutput(LimiteCliente limiteCliente)
+    public AtualizarLimiteOutput(LimiteClienteEntity limiteCliente)
         : this(
-        limiteCliente.Documento,
-        limiteCliente.NumeroAgencia,
-        limiteCliente.NumeroConta,
-        limiteCliente.LimiteTransacao
+            limiteCliente.Documento,
+            limiteCliente.NumeroAgencia,
+            limiteCliente.NumeroConta,
+            limiteCliente.LimiteTransacao
         )
     {
     }

@@ -1,6 +1,12 @@
+using FraudSys.Domain.Transacao;
+
 namespace FraudSys.Domain.LimiteCliente.Repository;
 
-public interface ILimiteClienteRepository : IRepository<LimiteCliente, string>
+public interface ILimiteClienteRepository : IRepository<LimiteClienteEntity, string>
 {
-    Task<bool> ExistsAsync(string documento, CancellationToken cancellationToken);
+    Task TransferirAsync(
+        LimiteClienteEntity from,
+        LimiteClienteEntity to,
+        TransacaoEntity transacao,
+        CancellationToken cancellationToken);
 }

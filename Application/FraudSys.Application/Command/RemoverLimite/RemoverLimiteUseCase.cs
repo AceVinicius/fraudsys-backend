@@ -22,13 +22,13 @@ public class RemoverLimiteUseCase : IRemoverLimiteUseCase
         RemoverLimiteInput input,
         CancellationToken cancellationToken)
     {
-        _appLogger.LogInformation("Removendo limiteCliente");
+        _appLogger.LogInformation("Removendo limiteClienteEntity");
 
         var limiteCliente = await _limiteClienteRepository.GetByIdAsync(
             input.Documento,
             cancellationToken);
 
-        _appLogger.LogInformation("O limiteCliente foi encontrado");
+        _appLogger.LogInformation("O limiteClienteEntity foi encontrado");
 
         await _limiteClienteRepository.DeleteAsync(limiteCliente.Documento, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
