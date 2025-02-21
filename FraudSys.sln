@@ -8,6 +8,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FraudSys.Application", "Application\FraudSys.Application\FraudSys.Application.csproj", "{F3DA10C4-C6F1-4439-B352-4210F39DFFD7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra", "Infra", "{B69256A0-FDF8-4C80-B2C1-56F378569B48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FraudSys.Infra.AWS.DynamoDB", "Infra\FraudSys.Infra.AWS.DynamoDB\FraudSys.Infra.AWS.DynamoDB.csproj", "{E2B08054-CB03-4B3F-A277-35D88B7126DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -16,6 +20,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{76B8AA7C-9245-4D48-87C3-51E41BCE2035} = {3A4C8C74-7CE8-4CB4-9874-087347FFAA8F}
 		{F3DA10C4-C6F1-4439-B352-4210F39DFFD7} = {36E600CD-6005-4F6E-BD8F-17A501E76BC1}
+		{E2B08054-CB03-4B3F-A277-35D88B7126DB} = {B69256A0-FDF8-4C80-B2C1-56F378569B48}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{76B8AA7C-9245-4D48-87C3-51E41BCE2035}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -26,5 +31,9 @@ Global
 		{F3DA10C4-C6F1-4439-B352-4210F39DFFD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3DA10C4-C6F1-4439-B352-4210F39DFFD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3DA10C4-C6F1-4439-B352-4210F39DFFD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2B08054-CB03-4B3F-A277-35D88B7126DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2B08054-CB03-4B3F-A277-35D88B7126DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2B08054-CB03-4B3F-A277-35D88B7126DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2B08054-CB03-4B3F-A277-35D88B7126DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
