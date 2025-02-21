@@ -24,25 +24,8 @@ public class BuscarLimiteUseCase : IBuscarLimiteUseCase
             request.Documento,
             cancellationToken);
 
-        if (limiteCliente == null)
-        {
-            _appLogger.LogError("O limiteCliente não foi encontrado");
-
-            return new BuscarLimiteOutput(
-                "",
-                "",
-                "",
-                0
-            );
-        }
-
         _appLogger.LogInformation("O limiteCliente foi encontrado");
 
-        return new BuscarLimiteOutput(
-            limiteCliente.Documento,
-            limiteCliente.NumeroAgencia,
-            limiteCliente.NumeroConta,
-            limiteCliente.LimiteTransacao
-        );
+        return new BuscarLimiteOutput(limiteCliente);
     }
 }

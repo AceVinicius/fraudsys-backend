@@ -18,9 +18,9 @@ public class LimiteCliente
 
     public void AtualizarLimite(decimal limiteTransacao)
     {
-        if (limiteTransacao <= 0)
+        if (limiteTransacao < 0)
         {
-            throw new ArgumentException("O limite de transação deve ser maior que zero.");
+            throw new EntityCreationException("O limite de transação deve ser maior que 0.");
         }
 
         LimiteTransacao = limiteTransacao;

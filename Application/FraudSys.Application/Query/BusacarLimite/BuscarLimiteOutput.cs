@@ -5,4 +5,15 @@ public record BuscarLimiteOutput(
     string NumeroAgencia,
     string NumeroConta,
     decimal LimiteTransacao
-);
+)
+{
+    public BuscarLimiteOutput(LimiteCliente limiteCliente)
+        : this(
+            limiteCliente.Documento,
+            limiteCliente.NumeroAgencia,
+            limiteCliente.NumeroConta,
+            limiteCliente.LimiteTransacao
+        )
+    {
+    }
+}

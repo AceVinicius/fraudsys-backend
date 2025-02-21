@@ -1,29 +1,25 @@
 namespace FraudSys.Domain.LimiteCliente.Validator;
 
-public class CadastrarLimiteClienteValidator : ICadastrarLimiteClienteValidator
+public static class CadastrarLimiteClienteValidator
 {
-    public bool Validate(string documento, string numeroAgencia, string numeroConta, decimal limiteTransacao)
+    public static void Validate(
+        string documento,
+        string numeroAgencia,
+        string numeroConta)
     {
-        if (string.IsNullOrEmpty(documento))
+        if (string.IsNullOrWhiteSpace(documento))
         {
-            return false;
+            throw new EntityValidationException("O campo documento é obrigatório.");
         }
 
-        if (string.IsNullOrEmpty(numeroAgencia))
+        if (string.IsNullOrWhiteSpace(numeroAgencia))
         {
-            return false;
+            throw new EntityValidationException("O campo número da agência é obrigatório.");
         }
 
-        if (string.IsNullOrEmpty(numeroConta))
+        if (string.IsNullOrWhiteSpace(numeroConta))
         {
-            return false;
+            throw new EntityValidationException("O campo número da conta é obrigatório.");
         }
-
-        if (limiteTransacao < 0)
-        {
-            return false;
-        }
-
-        return true;
     }
 }

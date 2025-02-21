@@ -28,16 +28,6 @@ public class RemoverLimiteUseCase : IRemoverLimiteUseCase
             input.Documento,
             cancellationToken);
 
-        if (limiteCliente == null)
-        {
-            _appLogger.LogError("O limiteCliente não foi encontrado");
-
-            return new RemoverLimiteOutput(
-                false,
-                "O limiteCliente não foi encontrado"
-            );
-        }
-
         _appLogger.LogInformation("O limiteCliente foi encontrado");
 
         await _limiteClienteRepository.DeleteAsync(limiteCliente.Documento, cancellationToken);
@@ -45,9 +35,6 @@ public class RemoverLimiteUseCase : IRemoverLimiteUseCase
 
         _appLogger.LogInformation("Limite removido com sucesso");
 
-        return new RemoverLimiteOutput(
-            true,
-            "Limite removido com sucesso"
-        );
+        return new RemoverLimiteOutput(limiteCliente);
     }
 }
