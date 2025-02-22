@@ -50,7 +50,7 @@ public class EfetuarTransacaoUseCaseTest
 
         // Assert
         Assert.NotNull(output);
-        Assert.Equal(StatusTransacao.Aprovada, output.StatusTransacao);
+        Assert.Equal(StatusTransacao.Aprovada, output.Status);
 
         _limiteClienteRepository.Verify(x => x.GetByIdAsync(
                 "1",
@@ -99,7 +99,7 @@ public class EfetuarTransacaoUseCaseTest
 
         // Assert
         Assert.NotNull(output);
-        Assert.Equal(StatusTransacao.Rejeitada, output.StatusTransacao);
+        Assert.Equal(StatusTransacao.Rejeitada, output.Status);
 
         _limiteClienteRepository.Verify(x => x.GetByIdAsync(
                 "1",
