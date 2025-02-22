@@ -1,5 +1,3 @@
-using System.Globalization;
-
 namespace FraudSys.Infra.AWS.DynamoDB.Configuration;
 
 [DynamoDBTable("LimiteClienteTable")]
@@ -19,6 +17,9 @@ public class LimiteClienteModel : IModel<LimiteClienteModel, LimiteClienteEntity
 
     public LimiteClienteModel()
     {
+        Documento = string.Empty;
+        NumeroAgencia = string.Empty;
+        NumeroConta = string.Empty;
     }
 
     public LimiteClienteModel(

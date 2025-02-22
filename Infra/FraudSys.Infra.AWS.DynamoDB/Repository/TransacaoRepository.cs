@@ -15,12 +15,14 @@ public class TransacaoRepository : RepositoryBase<
 
     public Task UpdateStatusAsync(TransacaoEntity transacao, CancellationToken cancellationToken)
     {
+        var transacaoModel = new TransacaoModel().EntityToModel(transacao);
+
         var request = new UpdateItemRequest
         {
             TableName = TableName,
             Key = new Dictionary<string, AttributeValue>
             {
-                { TableId, new AttributeValue { S = transacao.Id.ToString() } }
+                { TableId, new AttributeValue { S = transacaoModel.Id.ToString() } }
             },
             UpdateExpression = "SET #Status = :status",
             ExpressionAttributeNames = new Dictionary<string, string>
@@ -29,7 +31,7 @@ public class TransacaoRepository : RepositoryBase<
             },
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
-                { ":status", new AttributeValue { N = transacao.Status.ToString() } }
+                { ":status", new AttributeValue { N = transacaoModel.Status.ToString() } }
             }
         };
 

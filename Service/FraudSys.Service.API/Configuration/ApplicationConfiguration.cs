@@ -1,6 +1,3 @@
-using FraudSys.Application.Command.EfetuarTransacao;
-using FraudSys.Domain.Transacao.Validator;
-
 namespace FraudSys.Service.API.Configuration;
 
 public static class ApplicationConfiguration
@@ -29,7 +26,10 @@ public static class ApplicationConfiguration
         services.AddScoped<IAtualizarLimiteUseCase, AtualizarLimiteUseCase>();
         services.AddScoped<IRemoverLimiteUseCase, RemoverLimiteUseCase>();
         services.AddScoped<IBuscarLimiteUseCase, BuscarLimiteUseCase>();
+        services.AddScoped<IBuscarTodosLimitesUseCase, BuscarTodosLimitesUseCase>();
         services.AddScoped<IEfetuarTransacaoUseCase, EfetuarTransacaoUseCase>();
+        services.AddScoped<IBuscarTodasTransacoesUseCase, BuscarTodasTransacoesUseCase>();
+
     }
 
     private static void AddDomainDependencies(this IServiceCollection services)

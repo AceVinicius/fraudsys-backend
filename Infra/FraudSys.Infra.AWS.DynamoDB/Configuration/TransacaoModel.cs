@@ -30,6 +30,18 @@ public class TransacaoModel : IModel<TransacaoModel, TransacaoEntity, Guid>
 
     public TransacaoModel()
     {
+        Id = Guid.Empty;
+        Status = 0;
+        FromDocumento = string.Empty;
+        FromNumeroAgencia = string.Empty;
+        FromNumeroConta = string.Empty;
+        FromLimiteTransacao = 0;
+        ToDocumento = string.Empty;
+        ToNumeroAgencia = string.Empty;
+        ToNumeroConta = string.Empty;
+        ToLimiteTransacao = 0;
+        ValorTransferencia = 0;
+        DataTransacao = DateTime.MinValue;
     }
 
     public TransacaoModel(
@@ -134,7 +146,7 @@ public class TransacaoModel : IModel<TransacaoModel, TransacaoEntity, Guid>
             ToNumeroConta = attributeMap["ToNumeroConta"].S,
             ToLimiteTransacao = decimal.Parse(attributeMap["ToLimiteTransacao"].N),
             ValorTransferencia = decimal.Parse(attributeMap["ValorTransferencia"].N),
-            DataTransacao = DateTime.Parse(attributeMap["DataTransacao"].S)
+            DataTransacao = DateTime.ParseExact(attributeMap["DataTransacao"].S, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture)
         };
     }
 
