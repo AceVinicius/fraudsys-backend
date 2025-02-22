@@ -20,13 +20,8 @@ public class TransacaoEntity
         Status = StatusTransacao.Pendente;
         LimiteClientePagador = limiteClientePagador;
         LimiteClienteRecebedor = limiteClienteRecebedor;
-
-        if (valor <= 0)
-        {
-            throw new EntityCreationException("Valor da transação deve ser maior que zero.");
-        }
-
         Valor = valor;
+        DataTransacao = DateTime.Now;
     }
 
     public TransacaoEntity(
@@ -47,14 +42,29 @@ public class TransacaoEntity
 
     public void EfetuarTransacao()
     {
-        DataTransacao = DateTime.Now;
+        if (Status != StatusTransacao.Pendente)
+        {
+            return;
+        }
+
+        if (LimiteClientePagador == LimiteClienteRecebedor)
+        {
+            Status = StatusTransacao.Rejeitada;
+            return;
+        }
+
+        if (Valor <= 0)
+        {
+            Status = StatusTransacao.Rejeitada;
+            return;
+        }
 
         try
         {
             LimiteClientePagador.Debitar(Valor);
             LimiteClienteRecebedor.Creditar(Valor);
         }
-        catch (TransactionException e)
+        catch (TransactionException)
         {
             Status = StatusTransacao.Rejeitada;
             return;

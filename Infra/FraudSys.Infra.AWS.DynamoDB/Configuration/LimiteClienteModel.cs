@@ -70,7 +70,7 @@ public class LimiteClienteModel : IModel<LimiteClienteModel, LimiteClienteEntity
             Documento = attributeMap["Documento"].S,
             NumeroAgencia = attributeMap["NumeroAgencia"].S,
             NumeroConta = attributeMap["NumeroConta"].S,
-            LimiteTransacao = decimal.Parse(attributeMap["LimiteTransacao"].N)
+            LimiteTransacao = decimal.Parse(attributeMap["LimiteTransacao"].N,  CultureInfo.InvariantCulture)
         };
     }
 

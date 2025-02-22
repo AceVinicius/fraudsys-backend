@@ -37,8 +37,6 @@ public class EfetuarTransacaoUseCase : IEfetuarTransacaoUseCase
             input.DocumentoRecebedor,
             cancellationToken);
 
-        _transacaoValidatorFacade.ValidateTransacao(input.ValorTransacao, pagador);
-
         var transacao = new TransacaoEntity(
             pagador,
             recebedor,
@@ -49,18 +47,15 @@ public class EfetuarTransacaoUseCase : IEfetuarTransacaoUseCase
 
         transacao.EfetuarTransacao();
 
-        if (transacao.Status == StatusTransacao.Rejeitada)
+        if (transacao.Status == StatusTransacao.Aprovada)
         {
-            await _transacaoRepository.UpdateStatusAsync(transacao, cancellationToken);
-            await _unitOfWork.CommitAsync(cancellationToken);
-            return new EfetuarTransacaoOutput(transacao);
+            await _limiteClienteRepository.TransferirAsync(
+                pagador,
+                recebedor,
+                transacao,
+                cancellationToken);
         }
 
-        await _limiteClienteRepository.TransferirAsync(
-            pagador,
-            recebedor,
-            transacao,
-            cancellationToken);
         await _transacaoRepository.UpdateStatusAsync(transacao, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 

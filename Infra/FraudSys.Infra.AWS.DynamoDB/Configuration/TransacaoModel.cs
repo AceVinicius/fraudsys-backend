@@ -140,12 +140,12 @@ public class TransacaoModel : IModel<TransacaoModel, TransacaoEntity, Guid>
             FromDocumento = attributeMap["FromDocumento"].S,
             FromNumeroAgencia = attributeMap["FromNumeroAgencia"].S,
             FromNumeroConta = attributeMap["FromNumeroConta"].S,
-            FromLimiteTransacao = decimal.Parse(attributeMap["FromLimiteTransacao"].N),
+            FromLimiteTransacao = decimal.Parse(attributeMap["FromLimiteTransacao"].N, CultureInfo.InvariantCulture),
             ToDocumento = attributeMap["ToDocumento"].S,
             ToNumeroAgencia = attributeMap["ToNumeroAgencia"].S,
             ToNumeroConta = attributeMap["ToNumeroConta"].S,
-            ToLimiteTransacao = decimal.Parse(attributeMap["ToLimiteTransacao"].N),
-            ValorTransferencia = decimal.Parse(attributeMap["ValorTransferencia"].N),
+            ToLimiteTransacao = decimal.Parse(attributeMap["ToLimiteTransacao"].N, CultureInfo.InvariantCulture),
+            ValorTransferencia = decimal.Parse(attributeMap["ValorTransferencia"].N, CultureInfo.InvariantCulture),
             DataTransacao = DateTime.ParseExact(attributeMap["DataTransacao"].S, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture)
         };
     }
