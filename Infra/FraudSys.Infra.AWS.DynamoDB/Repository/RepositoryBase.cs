@@ -1,3 +1,5 @@
+using Amazon.Runtime;
+
 namespace FraudSys.Infra.AWS.DynamoDB.Repository;
 
 public abstract class RepositoryBase<TRepository, TEntity, TModel, TId> : IRepository<TEntity, TId>
@@ -7,17 +9,20 @@ public abstract class RepositoryBase<TRepository, TEntity, TModel, TId> : IRepos
     protected readonly IAmazonDynamoDB Client;
     protected readonly IUnitOfWork UnitOfWork;
     protected readonly string TableName;
+    protected readonly string TableId;
 
     protected RepositoryBase(
         IAppLogger<TRepository> appLogger,
         IAmazonDynamoDB client,
         IUnitOfWork unitOfWork,
-        string tableName)
+        string tableName,
+        string tableId)
     {
         AppLogger = appLogger;
         Client = client;
         UnitOfWork = unitOfWork;
         TableName = tableName;
+        TableId = tableId;
     }
 
     public async Task CreateAsync(TEntity input, CancellationToken cancellationToken)
@@ -39,7 +44,7 @@ public abstract class RepositoryBase<TRepository, TEntity, TModel, TId> : IRepos
                 {
                     TableName = TableName,
                     Item = new TModel().ToAttributeMap(model),
-                    ConditionExpression = "attribute_not_exists(Id)"
+                    ConditionExpression = $"attribute_not_exists({TableId})"
                 }
             });
 
@@ -90,7 +95,7 @@ public abstract class RepositoryBase<TRepository, TEntity, TModel, TId> : IRepos
                 {
                     TableName = TableName,
                     Key = new Dictionary<string, AttributeValue>
-                        { { "Id", new AttributeValue { S = id?.ToString() } } }
+                        { { TableId, new AttributeValue { S = id?.ToString() } } }
                 }
             });
         });
@@ -105,7 +110,8 @@ public abstract class RepositoryBase<TRepository, TEntity, TModel, TId> : IRepos
             var response = await Client.GetItemAsync(new GetItemRequest
             {
                 TableName = TableName,
-                Key = new Dictionary<string, AttributeValue> { { "Id", new AttributeValue { S = id?.ToString() } } }
+                Key = new Dictionary<string, AttributeValue> { { TableId, new AttributeValue { S = id?
+                    .ToString() } } }
             }, cancellationToken);
 
             if (response.Item.Count == 0)
@@ -145,36 +151,48 @@ public abstract class RepositoryBase<TRepository, TEntity, TModel, TId> : IRepos
             {
                 TableName = TableName,
                 Key = new Dictionary<string, AttributeValue>
-                    { { "Id", new AttributeValue { S = id?.ToString() } } }
+                {
+                    { TableId, new AttributeValue { S = id?.ToString() } }
+                }
             }, cancellationToken);
 
             return response.Item.Count > 0;
         });
     }
 
-    protected static async Task ExecuteWithExceptionHandling(Func<Task> action)
+    protected async Task ExecuteWithExceptionHandling(Func<Task> action)
     {
         try
         {
             await action();
         }
-        catch (System.Exception ex)
+        catch (AmazonDynamoDBException ex)
         {
-            throw new DatabaseException(ex.Message, ex);
+            AppLogger.LogError($"DynamoDB exception occurred: {ex.Message}");
+            throw;
+        }
+        catch (AmazonServiceException ex)
+        {
+            AppLogger.LogError($"Amazon Service exception ocurred: {ex.Message}");
+            throw;
         }
     }
 
-    protected static async Task<T> ExecuteWithExceptionHandling<T>(Func<Task<T>> action)
+    protected async Task<T> ExecuteWithExceptionHandling<T>(Func<Task<T>> action)
     {
-        return await action();
-
         try
         {
-
+            return await action();
         }
-        catch (System.Exception ex)
+        catch (AmazonDynamoDBException ex)
         {
-            throw new DatabaseException(ex.Message, ex);
+            AppLogger.LogError($"DynamoDB exception occurred: {ex.Message}");
+            throw;
+        }
+        catch (AmazonServiceException ex)
+        {
+            AppLogger.LogError($"Amazon Service exception ocurred: {ex.Message}");
+            throw;
         }
     }
 }

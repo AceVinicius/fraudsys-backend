@@ -1,5 +1,3 @@
-using FraudSys.Application.Repository;
-
 namespace FraudSys.Application.Command.RemoverLimite;
 
 public class RemoverLimiteUseCase : IRemoverLimiteUseCase

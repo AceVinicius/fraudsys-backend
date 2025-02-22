@@ -9,7 +9,7 @@ public class LimiteClienteRepository : RepositoryBase<
 {
     public LimiteClienteRepository(
         IAppLogger<LimiteClienteRepository> appLogger, IAmazonDynamoDB client, IUnitOfWork unitOfWork)
-        : base(appLogger, client, unitOfWork, "LimiteClienteTable")
+        : base(appLogger, client, unitOfWork, "LimiteClienteTable", "Documento")
     {
     }
 

@@ -1,5 +1,3 @@
-using FraudSys.Domain.Transacao.Enum;
-
 namespace FraudSys.Application.Command.EfetuarTransacao;
 
 public class EfetuarTransacaoUseCase : IEfetuarTransacaoUseCase

@@ -1,5 +1,3 @@
-using FraudSys.Application.Repository;
-
 namespace FraudSys.Application.Query.BusacarLimite;
 
 public class BuscarLimiteUseCase : IBuscarLimiteUseCase

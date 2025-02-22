@@ -9,7 +9,7 @@ public class TransacaoRepository : RepositoryBase<
 {
     public TransacaoRepository(
         IAppLogger<TransacaoRepository> appLogger, IAmazonDynamoDB client, IUnitOfWork unitOfWork)
-        : base(appLogger, client, unitOfWork, "TransacaoTable")
+        : base(appLogger, client, unitOfWork, "TransacaoTable", "Id")
     {
     }
 }

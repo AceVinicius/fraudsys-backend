@@ -1,5 +1,3 @@
-using FraudSys.Application.Repository;
-
 namespace FraudSys.Application.Command.CadastrarLimite;
 
 public class CadastrarLimiteUseCase : ICadastrarLimiteUseCase

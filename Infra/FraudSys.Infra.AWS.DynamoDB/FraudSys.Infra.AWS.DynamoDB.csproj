@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.405.25" />
+      <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.405.26" />
       <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.400" />
     </ItemGroup>
 
