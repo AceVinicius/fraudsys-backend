@@ -28,7 +28,6 @@ public class TransacaoModel : IModel<TransacaoModel, TransacaoEntity, Guid>
     [DynamoDBProperty]
     public DateTime DataTransacao { get; set; }
 
-
     public TransacaoModel()
     {
     }

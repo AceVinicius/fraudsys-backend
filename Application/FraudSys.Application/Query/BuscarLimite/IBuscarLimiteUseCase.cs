@@ -1,4 +1,4 @@
-namespace FraudSys.Application.Query.BusacarLimite;
+namespace FraudSys.Application.Query.BuscarLimite;
 
 public interface IBuscarLimiteUseCase : IQuery<BuscarLimiteInput, BuscarLimiteOutput>
 {
