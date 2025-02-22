@@ -3,5 +3,5 @@ namespace FraudSys.Application.Repository;
 public interface IUnitOfWork
 {
     public Task AddTransaction(object item);
-    public Task<bool> CommitAsync(CancellationToken cancellationToken);
+    public Task CommitAsync(CancellationToken cancellationToken);
 }

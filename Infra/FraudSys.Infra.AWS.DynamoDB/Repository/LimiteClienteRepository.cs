@@ -34,10 +34,10 @@ public class LimiteClienteRepository : RepositoryBase<
                     TableName = TableName,
                     Key = new Dictionary<string, AttributeValue>
                     {
-                        { "Documento", new AttributeValue { S = fromLimiteClienteModel.Documento } }
+                        { TableId, new AttributeValue { S = fromLimiteClienteModel.Documento } }
                     },
-                    UpdateExpression = "SET Limite = Limite - :valorTransacao",
-                    ConditionExpression = "Limite >= 0",
+                    UpdateExpression = "SET LimiteTransacao = LimiteTransacao - :valorTransacao",
+                    ConditionExpression = "LimiteTransacao >= :valorTransacao",
                     ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                     {
                         { ":valorTransacao", new AttributeValue { N = transacaoModel.ValorTransferencia.ToString(CultureInfo.InvariantCulture) } }
@@ -52,9 +52,9 @@ public class LimiteClienteRepository : RepositoryBase<
                     TableName = TableName,
                     Key = new Dictionary<string, AttributeValue>
                     {
-                        { "Documento", new AttributeValue { S = toLimiteClienteModel.Documento } }
+                        { TableId, new AttributeValue { S = toLimiteClienteModel.Documento } }
                     },
-                    UpdateExpression = "SET Limite = Limite + :valorTransacao",
+                    UpdateExpression = "SET LimiteTransacao = LimiteTransacao + :valorTransacao",
                     ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                     {
                         { ":valorTransacao", new AttributeValue { N = transacaoModel.ValorTransferencia.ToString(CultureInfo.InvariantCulture) } }

@@ -44,23 +44,24 @@ public class EfetuarTransacaoUseCase : IEfetuarTransacaoUseCase
             recebedor,
             input.ValorTransacao);
 
-        transacao.EfetuarTransacao();
-
         await _transacaoRepository.CreateAsync(transacao, cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
+
+        transacao.EfetuarTransacao();
 
         if (transacao.Status == StatusTransacao.Rejeitada)
         {
+            await _transacaoRepository.UpdateStatusAsync(transacao, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
             return new EfetuarTransacaoOutput(transacao);
         }
 
-        await _transacaoRepository.CreateAsync(transacao, cancellationToken);
         await _limiteClienteRepository.TransferirAsync(
             pagador,
             recebedor,
             transacao,
             cancellationToken);
-
+        await _transacaoRepository.UpdateStatusAsync(transacao, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
         return new EfetuarTransacaoOutput(transacao);

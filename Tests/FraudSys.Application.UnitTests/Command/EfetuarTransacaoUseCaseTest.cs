@@ -74,6 +74,11 @@ public class EfetuarTransacaoUseCaseTest
                 It.IsAny<CancellationToken>()
             ),
             Times.Once);
+        _transacaoRepository.Verify(x => x.CreateAsync(
+                It.IsAny<TransacaoEntity>(),
+                It.IsAny<CancellationToken>()
+            ),
+            Times.Once);
     }
 
     [Fact]
@@ -87,8 +92,6 @@ public class EfetuarTransacaoUseCaseTest
             _limiteClienteRepository.Object,
             _unitOfWork.Object);
 
-        var fixPagador = LimiteClienteFixture.LimiteClienteValido("1");
-        var fixRecebedor = LimiteClienteFixture.LimiteClienteValido("2");
         var input = new EfetuarTransacaoInput("1", "2", 1000000);
 
         // Act
@@ -120,6 +123,11 @@ public class EfetuarTransacaoUseCaseTest
                 It.IsAny<CancellationToken>()
             ),
             Times.Never);
+        _transacaoRepository.Verify(x => x.CreateAsync(
+                It.IsAny<TransacaoEntity>(),
+                It.IsAny<CancellationToken>()
+            ),
+            Times.Once);
     }
 
     [Fact]
@@ -152,5 +160,10 @@ public class EfetuarTransacaoUseCaseTest
         _limiteClienteRepository.Verify(
             x => x.TransferirAsync(It.IsAny<LimiteClienteEntity>(), It.IsAny<LimiteClienteEntity>(),
                 It.IsAny<TransacaoEntity>(), It.IsAny<CancellationToken>()), Times.Never);
+        _transacaoRepository.Verify(x => x.CreateAsync(
+                It.IsAny<TransacaoEntity>(),
+                It.IsAny<CancellationToken>()
+            ),
+            Times.Never);
     }
 }

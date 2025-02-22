@@ -1,3 +1,5 @@
+using Amazon.Runtime;
+
 namespace FraudSys.Infra.AWS.DynamoDB;
 
 public sealed class UnitOfWork : IUnitOfWork
@@ -30,10 +32,10 @@ public sealed class UnitOfWork : IUnitOfWork
         return Task.CompletedTask;
     }
 
-    public async Task<bool> CommitAsync(CancellationToken cancellationToken)
+    public async Task CommitAsync(CancellationToken cancellationToken)
     {
         if (_transactions.Count == 0)
-            return false;
+            return;
 
         var request = new TransactWriteItemsRequest { TransactItems = _transactions };
 
@@ -41,12 +43,16 @@ public sealed class UnitOfWork : IUnitOfWork
         {
             await _client.TransactWriteItemsAsync(request, cancellationToken);
             _transactions.Clear();
-            return true;
         }
-        catch (System.Exception ex)
+        catch (AmazonDynamoDBException ex)
         {
-            _appLogger.LogError("Erro ao executar transações.");
-            return false;
+            _appLogger.LogError($"DynamoDB exception occurred: {ex.Message}");
+            throw;
+        }
+        catch (AmazonServiceException ex)
+        {
+            _appLogger.LogError($"Amazon Service exception ocurred: {ex.Message}");
+            throw;
         }
     }
 }

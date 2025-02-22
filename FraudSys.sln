@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FraudSys.Service.API", "Ser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FraudSys.Application.UnitTests", "Tests\FraudSys.Application.UnitTests\FraudSys.Application.UnitTests.csproj", "{49ADD9B0-B505-44D4-B9A2-C3F468DD8F3A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FraudSys.Infra.Logger.UnitTests", "Tests\FraudSys.Infra.Logger.UnitTests\FraudSys.Infra.Logger.UnitTests.csproj", "{E95D9615-54FC-4058-AC51-51F08DF7D1B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,7 @@ Global
 		{3CFB697C-1315-47E3-BDA1-ED8BDF62AE01} = {5B079825-9732-4E82-8499-C07307DCD70F}
 		{53F79423-4EBB-48B3-BA9F-C08D29D46469} = {5A602D24-83C1-4BDA-AF7A-D9A7B896BE91}
 		{49ADD9B0-B505-44D4-B9A2-C3F468DD8F3A} = {5B079825-9732-4E82-8499-C07307DCD70F}
+		{E95D9615-54FC-4058-AC51-51F08DF7D1B0} = {5B079825-9732-4E82-8499-C07307DCD70F}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{76B8AA7C-9245-4D48-87C3-51E41BCE2035}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -67,5 +70,9 @@ Global
 		{49ADD9B0-B505-44D4-B9A2-C3F468DD8F3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49ADD9B0-B505-44D4-B9A2-C3F468DD8F3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49ADD9B0-B505-44D4-B9A2-C3F468DD8F3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E95D9615-54FC-4058-AC51-51F08DF7D1B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E95D9615-54FC-4058-AC51-51F08DF7D1B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E95D9615-54FC-4058-AC51-51F08DF7D1B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E95D9615-54FC-4058-AC51-51F08DF7D1B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
