@@ -1,3 +1,5 @@
+using FraudSys.Domain.LimiteCliente.Validator;
+
 namespace FraudSys.Infra.AWS.DynamoDB.Configuration;
 
 [DynamoDBTable("LimiteClienteTable")]
@@ -45,7 +47,8 @@ public class LimiteClienteModel : IModel<LimiteClienteModel, LimiteClienteEntity
 
     public LimiteClienteEntity ModelToEntity(LimiteClienteModel model)
     {
-        return new LimiteClienteEntity(
+        return LimiteClienteEntity.Hydrate(
+            new LimiteClienteValidatorFacade(),
             model.Documento,
             model.NumeroAgencia,
             model.NumeroConta,

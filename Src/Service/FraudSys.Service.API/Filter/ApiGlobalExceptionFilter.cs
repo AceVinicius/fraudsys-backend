@@ -64,10 +64,10 @@ public class ApiGlobalExceptionFilter : IExceptionFilter
                 isExceptionHandled = true;
                 break;
 
-            case EntityCreationException:
-                problemDetails.Title = nameof(EntityCreationException) + ": An error occurred";
+            case EntityHydrationException:
+                problemDetails.Title = nameof(EntityHydrationException) + ": An error occurred";
                 problemDetails.Status = StatusCodes.Status400BadRequest;
-                problemDetails.Type = nameof(EntityCreationException);
+                problemDetails.Type = nameof(EntityHydrationException);
                 problemDetails.Detail = context.Exception.Message;
 
                 isExceptionHandled = true;

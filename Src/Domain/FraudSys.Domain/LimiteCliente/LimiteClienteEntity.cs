@@ -2,46 +2,50 @@ namespace FraudSys.Domain.LimiteCliente;
 
 public class LimiteClienteEntity
 {
+    private readonly ILimiteClienteValidatorFacade _limiteClienteValidatorFacade;
     public string Documento { get; private set; }
     public string NumeroAgencia { get; private set; }
     public string NumeroConta { get; private set; }
     public decimal LimiteTransacao { get; private set; }
 
-    public  LimiteClienteEntity(string documento, string numeroAgencia, string numeroConta, decimal
-            limiteTransacao)
+    private LimiteClienteEntity(
+        ILimiteClienteValidatorFacade limiteClienteValidatorFacade,
+        string documento,
+        string numeroAgencia,
+        string numeroConta,
+        decimal limiteTransacao)
     {
+        _limiteClienteValidatorFacade = limiteClienteValidatorFacade;
         Documento = documento;
         NumeroAgencia = numeroAgencia;
         NumeroConta = numeroConta;
-
-        if (limiteTransacao < 0)
-        {
-            throw new EntityCreationException("O limite de transação deve ser maior que 0.");
-        }
-
         LimiteTransacao = limiteTransacao;
+
+        _limiteClienteValidatorFacade.Validate(
+            documento,
+            numeroAgencia,
+            numeroConta,
+            limiteTransacao);
     }
 
     public void AtualizarLimite(decimal limiteTransacao)
     {
-        if (limiteTransacao < 0)
-        {
-            throw new EntityCreationException("O limite de transação deve ser maior que 0.");
-        }
+        _limiteClienteValidatorFacade.ValidateAtualizacaoLimiteCliente(limiteTransacao);
 
         LimiteTransacao = limiteTransacao;
     }
 
     public void Debitar(decimal valorDebito)
     {
-        if (valorDebito <= 0)
+        try
         {
-            throw new TransactionException("O valor da transação deve ser maior que 0.");
+            _limiteClienteValidatorFacade.ValidateDebito(valorDebito, LimiteTransacao);
         }
-
-        if (valorDebito > LimiteTransacao)
+        catch (EntityValidationException ex)
         {
-            throw new TransactionException("O valor da transação é maior que o limite disponível.");
+            throw new TransactionException(
+                $"Erro ao debitar valor da transação: {ex.Message}",
+                ex);
         }
 
         LimiteTransacao -= valorDebito;
@@ -49,11 +53,59 @@ public class LimiteClienteEntity
 
     public void Creditar(decimal valorCredito)
     {
-        if (valorCredito <= 0)
+        try
         {
-            throw new TransactionException("O valor da transação deve ser maior que 0.");
+            _limiteClienteValidatorFacade.ValidateCredito(valorCredito);
+        }
+        catch (EntityValidationException ex)
+        {
+            throw new TransactionException(
+                $"Erro ao debitar valor da transação: {ex.Message}",
+                ex);
         }
 
         LimiteTransacao += valorCredito;
+    }
+
+    public static LimiteClienteEntity Create(
+        ILimiteClienteValidatorFacade limiteClienteValidatorFacade,
+        string documento,
+        string numeroAgencia,
+        string numeroConta,
+        decimal limiteTransacao)
+    {
+        limiteClienteValidatorFacade.Validate(
+            documento,
+            numeroAgencia,
+            numeroConta,
+            limiteTransacao);
+
+        return new LimiteClienteEntity(
+            limiteClienteValidatorFacade,
+            documento,
+            numeroAgencia,
+            numeroConta,
+            limiteTransacao);
+    }
+
+    public static LimiteClienteEntity Hydrate(
+        ILimiteClienteValidatorFacade limiteClienteValidatorFacade,
+        string documento,
+        string numeroAgencia,
+        string numeroConta,
+        decimal limiteTransacao)
+    {
+        limiteClienteValidatorFacade.ValidateHydration(
+            documento,
+            numeroAgencia,
+            numeroConta,
+            limiteTransacao);
+
+        return new LimiteClienteEntity(
+            limiteClienteValidatorFacade,
+            documento,
+            numeroAgencia,
+            numeroConta,
+            limiteTransacao);
     }
 }

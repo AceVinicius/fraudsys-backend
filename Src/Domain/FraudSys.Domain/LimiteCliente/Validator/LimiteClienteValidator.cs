@@ -2,11 +2,27 @@ namespace FraudSys.Domain.LimiteCliente.Validator;
 
 public static class LimiteClienteValidator
 {
-    public static void Validate(decimal limiteTransacao)
+    public static void ValidateEmptyString(string value)
     {
-        if (limiteTransacao < 0)
+        if (string.IsNullOrWhiteSpace(value))
         {
-            throw new EntityValidationException("Limite de transação não pode ser menor que 0.");
+            throw new EntityValidationException("O valor não pode ser nulo ou vazio.");
+        }
+    }
+
+    public static void ValidateLimiteCliente(decimal value)
+    {
+        if (value < 0)
+        {
+            throw new EntityValidationException("O valor do limite de transação deve ser maior que 0.");
+        }
+    }
+
+    public static void LimiteClienteSuficiente(decimal valorDebito, decimal limiteCliente)
+    {
+        if (valorDebito > limiteCliente)
+        {
+            throw new EntityValidationException("O valor da transação é maior que o limite disponível.");
         }
     }
 }

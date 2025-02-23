@@ -25,13 +25,8 @@ public class CadastrarLimiteUseCase : ICadastrarLimiteUseCase
     {
         _appLogger.LogInformation($"Cadastrando limite para o cliente {input.Documento}.");
 
-        _validatorFacade.ValidateCriacaoLimiteCliente(
-            input.Documento,
-            input.NumeroAgencia,
-            input.NumeroConta,
-            input.LimiteTransacao);
-
-        var limiteCliente = new LimiteClienteEntity(
+        var limiteCliente = LimiteClienteEntity.Create(
+            _validatorFacade,
             input.Documento,
             input.NumeroAgencia,
             input.NumeroConta,

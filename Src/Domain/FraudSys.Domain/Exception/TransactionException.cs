@@ -1,8 +1,4 @@
 namespace FraudSys.Domain.Exception;
 
-public class TransactionException : System.Exception
-{
-    public TransactionException(string message) : base(message)
-    {
-    }
-}
+public class TransactionException(string message, System.Exception innerException)
+    : System.Exception(message, innerException);

@@ -1,20 +1,24 @@
+using FraudSys.Domain.Transacao.Validator;
+
 namespace FraudSys.Application.Command.EfetuarTransacao;
 
 public class EfetuarTransacaoUseCase : IEfetuarTransacaoUseCase
 {
     private readonly IAppLogger<EfetuarTransacaoUseCase> _appLogger;
+    private readonly ITransacaoValidatorFacade _transacaoValidator;
     private readonly ITransacaoRepository _transacaoRepository;
     private readonly ILimiteClienteRepository _limiteClienteRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public EfetuarTransacaoUseCase(
         IAppLogger<EfetuarTransacaoUseCase> appLogger,
+        ITransacaoValidatorFacade transacaoValidator,
         ITransacaoRepository transacaoRepository,
         ILimiteClienteRepository limiteClienteRepository,
-        IUnitOfWork unitOfWork
-        )
+        IUnitOfWork unitOfWork)
     {
         _appLogger = appLogger;
+        _transacaoValidator = transacaoValidator;
         _transacaoRepository = transacaoRepository;
         _limiteClienteRepository = limiteClienteRepository;
         _unitOfWork = unitOfWork;
@@ -34,7 +38,8 @@ public class EfetuarTransacaoUseCase : IEfetuarTransacaoUseCase
             input.DocumentoRecebedor,
             cancellationToken);
 
-        var transacao = new TransacaoEntity(
+        var transacao = TransacaoEntity.Create(
+            _transacaoValidator,
             pagador,
             recebedor,
             input.ValorTransacao);

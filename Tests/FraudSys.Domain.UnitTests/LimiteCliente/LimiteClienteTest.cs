@@ -1,67 +1,144 @@
-using FraudSys.Domain.LimiteCliente;
 
 namespace FraudSys.Domain.UnitTests.LimiteCliente;
 
 public class LimiteClienteTest
 {
-    [Theory]
-    [InlineData(0)]
-    [InlineData(1)]
-    [InlineData(10)]
-    [InlineData(100.12371)]
-    public void Given_LimiteCliente_When_CriarLimiteCliente_Then_CreateEntity(decimal limite)
+    private readonly Mock<ILimiteClienteValidatorFacade> _validatorSuccess;
+    private readonly Mock<ILimiteClienteValidatorFacade> _validatorFail;
+    private readonly Mock<ILimiteClienteValidatorFacade> _validatorFailAtualizacaoLimite;
+    private readonly Mock<ILimiteClienteValidatorFacade> _validatorFailCreditar;
+    private readonly Mock<ILimiteClienteValidatorFacade> _validatorFailDebitar;
+
+    public LimiteClienteTest()
+    {
+        _validatorSuccess = new Mock<ILimiteClienteValidatorFacade>();
+        _validatorFail = new Mock<ILimiteClienteValidatorFacade>();
+        _validatorFailAtualizacaoLimite = new Mock<ILimiteClienteValidatorFacade>();
+        _validatorFailCreditar = new Mock<ILimiteClienteValidatorFacade>();
+        _validatorFailDebitar = new Mock<ILimiteClienteValidatorFacade>();
+
+        _validatorSuccess
+            .Setup(x => x.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<decimal>()));
+        _validatorSuccess
+            .Setup(x => x.ValidateAtualizacaoLimiteCliente(It.IsAny<decimal>()));
+        _validatorSuccess
+            .Setup(x => x.ValidateDebito(It.IsAny<decimal>(), It.IsAny<decimal>()));
+        _validatorSuccess
+            .Setup(x => x.ValidateCredito(It.IsAny<decimal>()));
+        _validatorSuccess
+            .Setup(x => x.ValidateHydration(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<decimal>()));
+
+        _validatorFail
+            .Setup(x => x.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<decimal>()))
+            .Throws(new EntityValidationException("Erro de validação"));
+
+        _validatorFailAtualizacaoLimite
+            .Setup(x => x.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<decimal>()));
+        _validatorFailAtualizacaoLimite
+            .Setup(x => x.ValidateAtualizacaoLimiteCliente(It.IsAny<decimal>()))
+            .Throws(new EntityValidationException("Erro de validação"));
+
+        _validatorFailCreditar
+            .Setup(x => x.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<decimal>()));
+        _validatorFailCreditar
+            .Setup(x => x.ValidateCredito(It.IsAny<decimal>()))
+            .Throws(new EntityValidationException("Erro de validação"));
+
+        _validatorFailDebitar
+            .Setup(x => x.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<decimal>()));
+        _validatorFailDebitar
+            .Setup(x => x.ValidateDebito(It.IsAny<decimal>(), It.IsAny<decimal>()))
+            .Throws(new EntityValidationException("Erro de validação"));
+    }
+
+    [Fact]
+    public void Given_LimiteCliente_When_CriarLimiteCliente_Then_CreateEntity()
     {
         // Arrange
         var fix = LimiteClienteFixture.LimiteClienteValido("1");
 
         // Act
-        var limiteCliente = new LimiteClienteEntity(
+        var limiteCliente = LimiteClienteEntity.Create(
+            _validatorSuccess.Object,
             fix.Documento,
             fix.NumeroAgencia,
             fix.NumeroConta,
-            limite);
+            fix.LimiteTransacao);
 
         // Assert
         Assert.NotNull(limiteCliente);
         Assert.Equal(fix.Documento, limiteCliente.Documento);
         Assert.Equal(fix.NumeroAgencia, limiteCliente.NumeroAgencia);
         Assert.Equal(fix.NumeroConta, limiteCliente.NumeroConta);
-        Assert.Equal(limite, limiteCliente.LimiteTransacao);
+        Assert.Equal(fix.LimiteTransacao, limiteCliente.LimiteTransacao);
     }
 
-    [Theory]
-    [InlineData("1", "1234", "4567-0", -1)]
-    [InlineData("1", "1234", "4567-0", -1.12973129)]
-    public void Given_LimiteClienteInvalido_When_CriarLimiteCliente_Then_ThrowEntityCreationException(
-        string documento,
-        string numeroAgencia,
-        string numeroConta,
-        decimal limite)
-    {
-        // Arrange
-
-        // Act
-        Action act = () =>
-            _ = new LimiteClienteEntity(
-                documento,
-                numeroAgencia,
-                numeroConta,
-                limite);
-
-        // Assert
-        Assert.Throws<EntityCreationException>(act);
-    }
-
-    [Theory]
-    [InlineData(0)]
-    [InlineData(1)]
-    [InlineData(10)]
-    [InlineData(100.12371)]
-    public void Given_LimiteCliente_When_AtualizarLimiteCliente_Then_UpdateEntity(decimal limite)
+    [Fact]
+    public void Given_LimiteClienteInvalido_When_CriarLimiteCliente_Then_ThrowEntityValidationException()
     {
         // Arrange
         var fix = LimiteClienteFixture.LimiteClienteValido("1");
-        var limiteCliente = new LimiteClienteEntity(
+        // Act
+        Action act = () => _ = LimiteClienteEntity.Create(
+            _validatorFail.Object,
+            fix.Documento,
+            fix.NumeroAgencia,
+            fix.NumeroConta,
+            fix.LimiteTransacao);
+
+        // Assert
+        Assert.Throws<EntityValidationException>(act);
+    }
+
+    [Fact]
+    public void Given_LimiteCliente_When_HydrateLimiteCliente_Then_HydrateEntity()
+    {
+        // Arrange
+        var fix = LimiteClienteFixture.LimiteClienteValido("1");
+
+
+        // Act
+        var hydratedLimiteCliente = LimiteClienteEntity.Hydrate(
+            _validatorSuccess.Object,
+            fix.Documento,
+            fix.NumeroAgencia,
+            fix.NumeroConta,
+            fix.LimiteTransacao);
+
+        // Assert
+        Assert.NotNull(hydratedLimiteCliente);
+        Assert.Equal(fix.Documento, hydratedLimiteCliente.Documento);
+        Assert.Equal(fix.NumeroAgencia, hydratedLimiteCliente.NumeroAgencia);
+        Assert.Equal(fix.NumeroConta, hydratedLimiteCliente.NumeroConta);
+        Assert.Equal(fix.LimiteTransacao, hydratedLimiteCliente.LimiteTransacao);
+    }
+
+    [Fact]
+    public void Given_LimiteCliente_When_HydrateLimiteClienteInvalido_Then_ThrowEntityValidationException()
+    {
+        // Arrange
+        var fix = LimiteClienteFixture.LimiteClienteValido("1");
+
+        // Act
+        Action act = () => _ = LimiteClienteEntity.Hydrate(
+            _validatorFail.Object,
+            fix.Documento,
+            fix.NumeroAgencia,
+            fix.NumeroConta,
+            fix.LimiteTransacao);
+
+        // Assert
+        Assert.Throws<EntityValidationException>(act);
+    }
+
+    [Fact]
+    public void Given_LimiteCliente_When_AtualizarLimiteCliente_Then_UpdateEntity()
+    {
+        // Arrange
+        var limite = 1000;
+        var fix = LimiteClienteFixture.LimiteClienteValido("1");
+        var limiteCliente = LimiteClienteEntity.Create(
+            _validatorSuccess.Object,
             fix.Documento,
             fix.NumeroAgencia,
             fix.NumeroConta,
@@ -78,15 +155,14 @@ public class LimiteClienteTest
         Assert.Equal(limite, limiteCliente.LimiteTransacao);
     }
 
-    [Theory]
-    [InlineData(-1)]
-    [InlineData(-1.23984329)]
-    public void Given_LimiteCliente_When_AtualizarLimiteClienteInvalido_Then_ThrowEntityUpdateException(
-        decimal limite)
+    [Fact]
+    public void Given_LimiteCliente_When_AtualizarLimiteClienteInvalido_Then_ThrowEntityValidationException()
     {
         // Arrange
+        var limite = -1;
         var fix = LimiteClienteFixture.LimiteClienteValido("1");
-        var limiteCliente = new LimiteClienteEntity(
+        var limiteCliente = LimiteClienteEntity.Create(
+            _validatorFailAtualizacaoLimite.Object,
             fix.Documento,
             fix.NumeroAgencia,
             fix.NumeroConta,
@@ -96,18 +172,17 @@ public class LimiteClienteTest
         var act = () => limiteCliente.AtualizarLimite(limite);
 
         // Assert
-        Assert.Throws<EntityCreationException>(act);
+        Assert.Throws<EntityValidationException>(act);
     }
 
-    [Theory]
-    [InlineData(1)]
-    [InlineData(10)]
-    [InlineData(12.1231)]
-    public void Given_LimiteCliente_When_CreditarCliente_Then_UpdateEntity(decimal valor)
+    [Fact]
+    public void Given_LimiteCliente_When_CreditarCliente_Then_UpdateEntity()
     {
         // Arrange
+        var valor = 1000;
         var fix = LimiteClienteFixture.LimiteClienteValido("1");
-        var limiteCliente = new LimiteClienteEntity(
+        var limiteCliente = LimiteClienteEntity.Create(
+            _validatorSuccess.Object,
             fix.Documento,
             fix.NumeroAgencia,
             fix.NumeroConta,
@@ -120,16 +195,14 @@ public class LimiteClienteTest
         Assert.Equal(fix.LimiteTransacao + valor, limiteCliente.LimiteTransacao);
     }
 
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-1)]
-    [InlineData(-10)]
-    [InlineData(-12.1231)]
-    public void Given_LimiteCliente_When_CreditarClienteInvalido_Then_ThrowTransactionException(decimal valor)
+    [Fact]
+    public void Given_LimiteCliente_When_CreditarClienteInvalido_Then_ThrowTransactionException()
     {
         // Arrange
+        var valor = -1;
         var fix = LimiteClienteFixture.LimiteClienteValido("1");
-        var limiteCliente = new LimiteClienteEntity(
+        var limiteCliente = LimiteClienteEntity.Create(
+            _validatorFailCreditar.Object,
             fix.Documento,
             fix.NumeroAgencia,
             fix.NumeroConta,
@@ -142,16 +215,14 @@ public class LimiteClienteTest
         Assert.Throws<TransactionException>(act);
     }
 
-    [Theory]
-    [InlineData(1)]
-    [InlineData(10)]
-    [InlineData(12.1231)]
-    [InlineData(1000)]
-    public void Given_LimiteCliente_When_DebitarCliente_Then_UpdateEntity(decimal valor)
+    [Fact]
+    public void Given_LimiteCliente_When_DebitarCliente_Then_UpdateEntity()
     {
         // Arrange
+        var valor = 1000;
         var fix = LimiteClienteFixture.LimiteClienteValido("1");
-        var limiteCliente = new LimiteClienteEntity(
+        var limiteCliente = LimiteClienteEntity.Create(
+            _validatorSuccess.Object,
             fix.Documento,
             fix.NumeroAgencia,
             fix.NumeroConta,
@@ -164,16 +235,14 @@ public class LimiteClienteTest
         Assert.Equal(fix.LimiteTransacao - valor, limiteCliente.LimiteTransacao);
     }
 
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-1)]
-    [InlineData(-10)]
-    [InlineData(-12.1231)]
-    public void Given_LimiteCliente_When_DebitarClienteInvalido_Then_ThrowTransactionException(decimal valor)
+    [Fact]
+    public void Given_LimiteCliente_When_DebitarClienteInvalido_Then_ThrowTransactionException()
     {
         // Arrange
+        var valor = -1;
         var fix = LimiteClienteFixture.LimiteClienteValido("1");
-        var limiteCliente = new LimiteClienteEntity(
+        var limiteCliente = LimiteClienteEntity.Create(
+            _validatorFailDebitar.Object,
             fix.Documento,
             fix.NumeroAgencia,
             fix.NumeroConta,

@@ -6,7 +6,8 @@ public static class LimiteClienteFixture
 {
     public static LimiteClienteEntity LimiteClienteValido(string id)
     {
-        return new LimiteClienteEntity(
+        return LimiteClienteEntity.Create(
+            new LimiteClienteValidatorFacade(),
             id,
             "1234",
             "1000-1",

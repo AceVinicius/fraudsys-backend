@@ -1,10 +1,13 @@
+using FraudSys.Domain.LimiteCliente.Validator;
+using FraudSys.Domain.Transacao.Validator;
+
 namespace FraudSys.Infra.AWS.DynamoDB.Configuration;
 
 [DynamoDBTable("TransacaoTable")]
 public class TransacaoModel : IModel<TransacaoModel, TransacaoEntity, Guid>
 {
     [DynamoDBHashKey]
-    public Guid Id { get; set; }
+    public string Id { get; set; }
     [DynamoDBProperty]
     public int Status { get; set; }
     [DynamoDBProperty]
@@ -30,7 +33,7 @@ public class TransacaoModel : IModel<TransacaoModel, TransacaoEntity, Guid>
 
     public TransacaoModel()
     {
-        Id = Guid.Empty;
+        Id = string.Empty;
         Status = 0;
         FromDocumento = string.Empty;
         FromNumeroAgencia = string.Empty;
@@ -45,7 +48,7 @@ public class TransacaoModel : IModel<TransacaoModel, TransacaoEntity, Guid>
     }
 
     public TransacaoModel(
-        Guid id,
+        string id,
         int status,
         string fromDocumento,
         string fromNumeroAgencia,
@@ -75,7 +78,7 @@ public class TransacaoModel : IModel<TransacaoModel, TransacaoEntity, Guid>
     public TransacaoModel EntityToModel(TransacaoEntity entity)
     {
         return new TransacaoModel(
-            entity.Id,
+            entity.Id.ToString(),
             (int) entity.Status,
             entity.LimiteClientePagador.Documento,
             entity.LimiteClientePagador.NumeroAgencia,
@@ -91,21 +94,24 @@ public class TransacaoModel : IModel<TransacaoModel, TransacaoEntity, Guid>
 
     public TransacaoEntity ModelToEntity(TransacaoModel model)
     {
-        var limiteClientePagador = new LimiteClienteEntity(
+        var limiteClientePagador = LimiteClienteEntity.Hydrate(
+            new LimiteClienteValidatorFacade(),
             model.FromDocumento,
             model.FromNumeroAgencia,
             model.FromNumeroConta,
             model.FromLimiteTransacao);
 
-        var limiteClienteRecebedor = new LimiteClienteEntity(
+        var limiteClienteRecebedor = LimiteClienteEntity.Hydrate(
+            new LimiteClienteValidatorFacade(),
             model.ToDocumento,
             model.ToNumeroAgencia,
             model.ToNumeroConta,
             model.ToLimiteTransacao);
 
-        return new TransacaoEntity(
+        return TransacaoEntity.Hydrate(
+            new TransacaoValidatorFacade(),
             model.Id,
-            (StatusTransacao) model.Status,
+            model.Status,
             limiteClientePagador,
             limiteClienteRecebedor,
             model.ValorTransferencia,
@@ -116,7 +122,7 @@ public class TransacaoModel : IModel<TransacaoModel, TransacaoEntity, Guid>
     {
         return new Dictionary<string, AttributeValue>
         {
-            { "Id", new AttributeValue { S = model.Id.ToString() } },
+            { "Id", new AttributeValue { S = model.Id } },
             { "Status", new AttributeValue { N = model.Status.ToString() } },
             { "FromDocumento", new AttributeValue { S = model.FromDocumento } },
             { "FromNumeroAgencia", new AttributeValue { S = model.FromNumeroAgencia } },
@@ -135,7 +141,7 @@ public class TransacaoModel : IModel<TransacaoModel, TransacaoEntity, Guid>
     {
         return new TransacaoModel
         {
-            Id = Guid.Parse(attributeMap["Id"].S),
+            Id = attributeMap["Id"].S,
             Status = int.Parse(attributeMap["Status"].N),
             FromDocumento = attributeMap["FromDocumento"].S,
             FromNumeroAgencia = attributeMap["FromNumeroAgencia"].S,
