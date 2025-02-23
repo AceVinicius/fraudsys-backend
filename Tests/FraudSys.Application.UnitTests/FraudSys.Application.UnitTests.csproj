@@ -28,7 +28,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Application\FraudSys.Application\FraudSys.Application.csproj" />
+      <ProjectReference
+              Include="..\..\Src\Application\FraudSys.Application\FraudSys.Application.csproj" />
       <ProjectReference Include="..\FraudSys.Domain.UnitTests\FraudSys.Domain.UnitTests.csproj" />
     </ItemGroup>
 

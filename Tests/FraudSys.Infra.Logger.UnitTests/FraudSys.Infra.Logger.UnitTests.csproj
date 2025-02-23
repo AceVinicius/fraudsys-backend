@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Infra\FraudSys.Infra.Logger\FraudSys.Infra.Logger.csproj" />
+      <ProjectReference Include="..\..\Src\Infra\FraudSys.Infra.Logger\FraudSys.Infra.Logger.csproj" />
     </ItemGroup>
 
 </Project>
