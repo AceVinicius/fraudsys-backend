@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Remove="SeedWork\IDomainEvent.cs" />
+      <Compile Remove="SeedWork\IAggregateRoot.cs" />
+    </ItemGroup>
+
 </Project>

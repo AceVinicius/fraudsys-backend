@@ -37,12 +37,9 @@ public class EfetuarTransacaoUseCaseTest
         var efetuarTransacaoUseCase = new EfetuarTransacaoUseCase(
             _appLogger.Object,
             _transacaoRepository.Object,
-            _transacaoValidatorFacade.Object,
             _limiteClienteRepository.Object,
             _unitOfWork.Object);
 
-        var fixPagador = LimiteClienteFixture.LimiteClienteValido("1");
-        var fixRecebedor = LimiteClienteFixture.LimiteClienteValido("2");
         var input = new EfetuarTransacaoInput("1", "2", 1000);
 
         // Act
@@ -51,6 +48,7 @@ public class EfetuarTransacaoUseCaseTest
         // Assert
         Assert.NotNull(output);
         Assert.Equal(StatusTransacao.Aprovada, output.Status);
+
 
         _limiteClienteRepository.Verify(x => x.GetByIdAsync(
                 "1",
@@ -88,7 +86,6 @@ public class EfetuarTransacaoUseCaseTest
         var efetuarTransacaoUseCase = new EfetuarTransacaoUseCase(
             _appLogger.Object,
             _transacaoRepository.Object,
-            _transacaoValidatorFacade.Object,
             _limiteClienteRepository.Object,
             _unitOfWork.Object);
 
@@ -137,7 +134,6 @@ public class EfetuarTransacaoUseCaseTest
         var efetuarTransacaoUseCase = new EfetuarTransacaoUseCase(
             _appLogger.Object,
             _transacaoRepository.Object,
-            _transacaoValidatorFacade.Object,
             _limiteClienteRepository.Object,
             _unitOfWork.Object);
 

@@ -1,6 +1,3 @@
-using FraudSys.Domain.LimiteCliente;
-using FraudSys.Domain.LimiteCliente.Validator;
-
 namespace FraudSys.Domain.UnitTests.LimiteCliente.Validator;
 
 public class LimiteClienteValidatorTest
@@ -13,7 +10,6 @@ public class LimiteClienteValidatorTest
     public void Given_LimiteCliente_When_ValidarLimiteCliente_Then_ValidateEntity(decimal limite)
     {
         // Arrange
-        var fix = LimiteClienteFixture.LimiteClienteValido("1");
 
         // Act
         LimiteClienteValidator.Validate(limite);

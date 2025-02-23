@@ -1,6 +1,3 @@
-using FraudSys.Domain.Transacao;
-using FraudSys.Domain.Transacao.Enum;
-
 namespace FraudSys.Application.Command.EfetuarTransacao;
 
 public record EfetuarTransacaoOutput(

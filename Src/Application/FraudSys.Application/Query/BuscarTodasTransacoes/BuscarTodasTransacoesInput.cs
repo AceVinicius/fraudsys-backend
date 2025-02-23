@@ -1,3 +1,3 @@
 namespace FraudSys.Application.Query.BuscarTodasTransacoes;
 
-public record BuscarTodasTransacoesInput();
+public record BuscarTodasTransacoesInput;

@@ -1,5 +1,3 @@
-using FraudSys.Domain.Transacao.Enum;
-
 namespace FraudSys.Domain.Transacao;
 
 public class TransacaoEntity

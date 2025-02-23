@@ -24,14 +24,14 @@ public class CadastrarClienteLimiteValidatorTest
     [InlineData("1", " ", "4567-0")]
     [InlineData("1", "1234", " ")]
     public void LimiteClienteSuficienteValidator_InvalidParameters_ThrowsException(
-        string documento,
-        string agencia,
-        string conta)
+        string? documento,
+        string? agencia,
+        string? conta)
     {
         // Arrange
 
         // Act
-        var act = () => CadastrarLimiteClienteValidator.Validate(documento, agencia, conta);
+        var act = () => CadastrarLimiteClienteValidator.Validate(documento!, agencia!, conta!);
 
         // Assert
         Assert.Throws<EntityValidationException>(act);

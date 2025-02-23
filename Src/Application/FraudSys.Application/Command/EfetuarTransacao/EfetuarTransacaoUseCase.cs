@@ -4,21 +4,18 @@ public class EfetuarTransacaoUseCase : IEfetuarTransacaoUseCase
 {
     private readonly IAppLogger<EfetuarTransacaoUseCase> _appLogger;
     private readonly ITransacaoRepository _transacaoRepository;
-    private readonly ITransacaoValidatorFacade _transacaoValidatorFacade;
     private readonly ILimiteClienteRepository _limiteClienteRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public EfetuarTransacaoUseCase(
         IAppLogger<EfetuarTransacaoUseCase> appLogger,
         ITransacaoRepository transacaoRepository,
-        ITransacaoValidatorFacade transacaoValidatorFacade,
         ILimiteClienteRepository limiteClienteRepository,
         IUnitOfWork unitOfWork
         )
     {
         _appLogger = appLogger;
         _transacaoRepository = transacaoRepository;
-        _transacaoValidatorFacade = transacaoValidatorFacade;
         _limiteClienteRepository = limiteClienteRepository;
         _unitOfWork = unitOfWork;
     }

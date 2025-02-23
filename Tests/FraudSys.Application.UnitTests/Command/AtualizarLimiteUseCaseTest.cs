@@ -38,12 +38,14 @@ public class AtualizarLimiteUseCaseTest
         var output = await atualizarLimiteUseCase.Execute(input, CancellationToken.None);
 
         // Assert
-        _validatorFacade.Verify(x => x.ValidateAtualizacaoLimiteCliente(
-            input.NovoLimite), Times.Once);
-        _limiteClienteRepository.Verify(x => x.GetByIdAsync("1", It.IsAny<CancellationToken>()), Times.Once);
+        _validatorFacade
+            .Verify(x => x.ValidateAtualizacaoLimiteCliente(input.NovoLimite), Times.Once);
+        _limiteClienteRepository
+            .Verify(x => x.GetByIdAsync("1", It.IsAny<CancellationToken>()), Times.Once);
         _limiteClienteRepository
             .Verify(x => x.UpdateAsync(It.IsAny<LimiteClienteEntity>(), It.IsAny<CancellationToken>()), Times.Once);
-        _unitOfWork.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWork
+            .Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
 
         Assert.NotNull(output);
         Assert.NotNull(output.Documento);

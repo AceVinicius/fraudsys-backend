@@ -45,7 +45,7 @@ public class LimiteClienteController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Atualizar(
         [FromRoute] string documento,
-        [FromBody] AtualizaRequest novoLimite,
+        [FromBody] AtualizarRequest novoLimite,
         CancellationToken cancellationToken)
     {
         var output = await _atualizarLimiteUseCase.Execute(
@@ -62,7 +62,7 @@ public class LimiteClienteController : ControllerBase
         [FromRoute] string documento,
         CancellationToken cancellationToken)
     {
-        var output = await _removerLimiteUseCase.Execute(
+        _ = await _removerLimiteUseCase.Execute(
             new RemoverLimiteInput(documento),
             cancellationToken);
 
@@ -96,7 +96,7 @@ public class LimiteClienteController : ControllerBase
     }
 }
 
-public class AtualizaRequest
+public class AtualizarRequest(decimal novoLimite)
 {
-    public decimal NovoLimite { get; set; }
+    public decimal NovoLimite { get; } = novoLimite;
 }
