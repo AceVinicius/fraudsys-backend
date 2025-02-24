@@ -20,12 +20,6 @@ public class LimiteClienteEntity
         NumeroAgencia = numeroAgencia;
         NumeroConta = numeroConta;
         LimiteTransacao = limiteTransacao;
-
-        _limiteClienteValidatorFacade.Validate(
-            documento,
-            numeroAgencia,
-            numeroConta,
-            limiteTransacao);
     }
 
     public void AtualizarLimite(decimal limiteTransacao)

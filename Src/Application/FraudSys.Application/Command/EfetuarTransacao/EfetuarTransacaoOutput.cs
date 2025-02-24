@@ -31,5 +31,6 @@ public record EfetuarTransacaoOutput(
             transacao.DataTransacao
         )
     {
+
     }
 }

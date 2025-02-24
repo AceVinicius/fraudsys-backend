@@ -3,55 +3,67 @@ namespace FraudSys.Application.UnitTests.Query;
 public class BuscarLimiteUseCaseTest
 {
     private readonly Mock<IAppLogger<BuscarLimiteUseCase>> _appLogger;
-    private readonly Mock<ILimiteClienteRepository> _limiteClienteRepository;
+    private readonly Mock<ILimiteClienteRepository> _limiteClienteRepositorySuccess;
+    private readonly Mock<ILimiteClienteRepository> _limiteClienteRepositoryGetByIdFail;
+    private readonly CancellationToken _cancellationToken;
 
     public BuscarLimiteUseCaseTest()
     {
         _appLogger = new Mock<IAppLogger<BuscarLimiteUseCase>>();
-        _limiteClienteRepository = new Mock<ILimiteClienteRepository>();
+        _limiteClienteRepositorySuccess = new Mock<ILimiteClienteRepository>();
+        _limiteClienteRepositoryGetByIdFail = new Mock<ILimiteClienteRepository>();
 
-        _limiteClienteRepository
-            .Setup(x => x.GetByIdAsync("1", It.IsAny<CancellationToken>()))
+        _cancellationToken = CancellationToken.None;
+
+        _limiteClienteRepositorySuccess
+            .Setup(x => x.GetByIdAsync("1", _cancellationToken))
             .ReturnsAsync(LimiteClienteFixture.LimiteClienteValido("1"));
+        _limiteClienteRepositorySuccess
+            .Setup(x => x.DeleteAsync(It.IsAny<string>(), _cancellationToken));
+
+        _limiteClienteRepositoryGetByIdFail
+            .Setup(x => x.GetByIdAsync("1", _cancellationToken))
+            .Throws(new Exception("Erro de repository"));
     }
 
     [Fact]
-    public async Task Given_ValidInput_When_Execute_Then_ReturnLimiteCliente()
+    public async Task Given_BuscarLimiteInput_When_Execute_Then_ReturnBuscarLimiteOutput()
     {
         // Arrange
-        var buscarLimiteUseCase = new BuscarLimiteUseCase(
-            _appLogger.Object,
-            _limiteClienteRepository.Object);
-
         var input = new BuscarLimiteInput("1");
 
+        var buscarLimiteUseCase = new BuscarLimiteUseCase(
+            _appLogger.Object,
+            _limiteClienteRepositorySuccess.Object);
+
         // Act
-        var output = await buscarLimiteUseCase.Execute(input, CancellationToken.None);
+        var output = await buscarLimiteUseCase.Execute(input, _cancellationToken);
 
         // Assert
-        _limiteClienteRepository.Verify(x => x.GetByIdAsync("1", It.IsAny<CancellationToken>()), Times.Once);
-
         Assert.NotNull(output);
-        Assert.NotNull(output.Documento);
         Assert.Equal("1", output.Documento);
+
+        _limiteClienteRepositorySuccess
+            .Verify(x => x.GetByIdAsync("1", _cancellationToken), Times.Once);
     }
 
     [Fact]
-    public async Task Given_InvalidInput_When_Execute_Then_ThrowNotFoundException()
+    public async Task Given_BuscarLimiteInput_When_GetByIdFails_Then_ThrowException()
     {
         // Arrange
+        var input = new BuscarLimiteInput("1");
+
         var buscarLimiteUseCase = new BuscarLimiteUseCase(
             _appLogger.Object,
-            _limiteClienteRepository.Object);
-
-        var input = new BuscarLimiteInput("2");
+            _limiteClienteRepositoryGetByIdFail.Object);
 
         // Act
-        var act  = async () => await buscarLimiteUseCase.Execute(input, CancellationToken.None);
+        var act = async () => _ = await buscarLimiteUseCase.Execute(input, _cancellationToken);
 
         // Assert
-        await Assert.ThrowsAnyAsync<Exception>(act);
+        await Assert.ThrowsAsync<Exception>(act);
 
-        _limiteClienteRepository.Verify(x => x.GetByIdAsync("2", It.IsAny<CancellationToken>()), Times.Once);
+        _limiteClienteRepositoryGetByIdFail
+            .Verify(x => x.GetByIdAsync("1", _cancellationToken), Times.Once);
     }
 }

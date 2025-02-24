@@ -14,4 +14,16 @@ public static class LimiteClienteFixture
             1000m
         );
     }
+
+    public static IEnumerable<LimiteClienteEntity> LimiteClienteValidos(int quantidade)
+    {
+        var limites = new List<LimiteClienteEntity>();
+
+        for (var i = 1; i <= quantidade; i++)
+        {
+            limites.Add(LimiteClienteValido(i.ToString()));
+        }
+
+        return limites;
+    }
 }

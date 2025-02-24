@@ -1,5 +1,3 @@
-using FraudSys.Domain.Transacao.Validator;
-
 namespace FraudSys.Application.Command.EfetuarTransacao;
 
 public class EfetuarTransacaoUseCase : IEfetuarTransacaoUseCase
@@ -28,7 +26,7 @@ public class EfetuarTransacaoUseCase : IEfetuarTransacaoUseCase
         EfetuarTransacaoInput input,
         CancellationToken cancellationToken)
     {
-        _appLogger.LogInformation("Efetuando transação");
+        _appLogger.LogInformation("Iniciando use case para efetuar transação.");
 
         var pagador = await _limiteClienteRepository.GetByIdAsync(
             input.DocumentoPagador,
@@ -47,10 +45,20 @@ public class EfetuarTransacaoUseCase : IEfetuarTransacaoUseCase
         await _transacaoRepository.CreateAsync(transacao, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        transacao.EfetuarTransacao();
+        try
+        {
+            transacao.EfetuarTransacao();
+        }
+        catch (TransactionException ex)
+        {
+            _appLogger.LogError(
+                $"Transação rejeitada. Não será efetuada transferência de valores. Mensagem: {ex.Message}");
+        }
 
         if (transacao.Status == StatusTransacao.Aprovada)
         {
+            _appLogger.LogInformation("Transação aprovada. Efetuando transferência de valores.");
+
             await _limiteClienteRepository.TransferirAsync(
                 pagador,
                 recebedor,
@@ -60,6 +68,8 @@ public class EfetuarTransacaoUseCase : IEfetuarTransacaoUseCase
 
         await _transacaoRepository.UpdateStatusAsync(transacao, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
+
+        _appLogger.LogInformation("Transação finalizada com sucesso.");
 
         return new EfetuarTransacaoOutput(transacao);
     }

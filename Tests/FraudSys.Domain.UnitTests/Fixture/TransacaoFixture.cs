@@ -13,4 +13,16 @@ public static class TransacaoFixture
             limiteClienteRecebedor,
             valor);
     }
+
+    public static IEnumerable<TransacaoEntity> TransacoesValidas(int quantidade)
+    {
+        var limites = new List<TransacaoEntity>();
+
+        for (var i = 1; i <= quantidade; i++)
+        {
+            limites.Add(TransacaoValida(i * 100m));
+        }
+
+        return limites;
+    }
 }

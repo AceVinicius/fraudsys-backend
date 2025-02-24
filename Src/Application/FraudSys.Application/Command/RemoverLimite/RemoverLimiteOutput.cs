@@ -15,5 +15,6 @@ public record RemoverLimiteOutput(
             limiteClienteEntity.LimiteTransacao
         )
     {
+
     }
 }

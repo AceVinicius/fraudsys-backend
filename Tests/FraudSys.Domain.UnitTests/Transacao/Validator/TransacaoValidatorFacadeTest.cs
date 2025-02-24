@@ -2,6 +2,13 @@ namespace FraudSys.Domain.UnitTests.Transacao.Validator;
 
 public class TransacaoValidatorFacadeTest
 {
+    private readonly ITransacaoValidatorFacade _transacaoValidatorFacade;
+
+    public TransacaoValidatorFacadeTest()
+    {
+        _transacaoValidatorFacade = new TransacaoValidatorFacade();
+    }
+
     [Fact]
     public void Given_TransacaoValidatorFacade_When_Validate_Then_NotThrowException()
     {
@@ -10,10 +17,8 @@ public class TransacaoValidatorFacadeTest
         var recebedor = LimiteClienteFixture.LimiteClienteValido("2");
         var valor = 10.0m;
 
-        var transacaoValidatorFacade = new TransacaoValidatorFacade();
-
         // Act
-        transacaoValidatorFacade.Validate(pagador, recebedor, valor);
+        _transacaoValidatorFacade.Validate(pagador, recebedor, valor);
 
         // Assert
     }
@@ -30,10 +35,8 @@ public class TransacaoValidatorFacadeTest
         var pagador = LimiteClienteFixture.LimiteClienteValido(pagadorId);
         var recebedor = LimiteClienteFixture.LimiteClienteValido(recebedorId);
 
-        var transacaoValidatorFacade = new TransacaoValidatorFacade();
-
         // Act
-        var act = () => transacaoValidatorFacade.Validate(pagador, recebedor, valor);
+        var act = () => _transacaoValidatorFacade.Validate(pagador, recebedor, valor);
 
         // Assert
         Assert.Throws<EntityValidationException>(act);
@@ -50,10 +53,8 @@ public class TransacaoValidatorFacadeTest
         var valor = 10.0m;
         var dataTransacao = DateTime.Now;
 
-        var transacaoValidatorFacade = new TransacaoValidatorFacade();
-
         // Act
-        transacaoValidatorFacade.ValidateHydration(id, status, pagador, recebedor, valor, dataTransacao);
+        _transacaoValidatorFacade.ValidateHydration(id, status, pagador, recebedor, valor, dataTransacao);
 
         // Assert
     }
@@ -76,12 +77,35 @@ public class TransacaoValidatorFacadeTest
         var recebedor = LimiteClienteFixture.LimiteClienteValido(recebedorId);
         var dataTransacao = DateTime.Now;
 
-        var transacaoValidatorFacade = new TransacaoValidatorFacade();
-
         // Act
-        var act = () => transacaoValidatorFacade.ValidateHydration(id, status, pagador, recebedor, valor, dataTransacao);
+        var act = () => _transacaoValidatorFacade.ValidateHydration(id, status, pagador, recebedor, valor, dataTransacao);
 
         // Assert
         Assert.Throws<EntityHydrationException>(act);
+    }
+
+    [Fact]
+    public void Given_TransacaoValidatorFacade_When_ValidateEfetuarTransacao_Then_ThrowEntityHydrationException()
+    {
+        // Arrange
+        var status = StatusTransacao.Pendente;
+
+        // Act
+        _transacaoValidatorFacade.ValidateEfetuarTransacao(status);
+
+        // Assert
+    }
+
+    [Fact]
+    public void Given_TransacaoValidatorFacade_When_StatusTransacaoErrado_Then_ThrowEntityHydrationException()
+    {
+        // Arrange
+        var status = StatusTransacao.Aprovada;
+
+        // Act
+        var act = () => _transacaoValidatorFacade.ValidateEfetuarTransacao(status);
+
+        // Assert
+        Assert.Throws<EntityValidationException>(act);
     }
 }

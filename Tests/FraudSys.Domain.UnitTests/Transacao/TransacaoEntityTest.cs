@@ -4,36 +4,25 @@ public class TransacaoEntityTest
 {
     private readonly Mock<ITransacaoValidatorFacade> _validatorSuccess;
     private readonly Mock<ITransacaoValidatorFacade> _validatorFail;
-    private readonly Mock<ITransacaoValidatorFacade> _validatorFailEfetuarTransacao;
 
     public TransacaoEntityTest()
     {
         _validatorSuccess = new Mock<ITransacaoValidatorFacade>();
         _validatorFail = new Mock<ITransacaoValidatorFacade>();
-        _validatorFailEfetuarTransacao = new Mock<ITransacaoValidatorFacade>();
 
         _validatorSuccess
             .Setup(x => x.Validate(It.IsAny<LimiteClienteEntity>(), It.IsAny<LimiteClienteEntity>(), It.IsAny<decimal>()));
         _validatorSuccess
-            .Setup(x => x.ValidateHydration(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<LimiteClienteEntity>(),
-                It.IsAny<LimiteClienteEntity>(), It.IsAny<decimal>(), It.IsAny<DateTime>()));
+            .Setup(x => x.ValidateHydration(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<LimiteClienteEntity>(), It.IsAny<LimiteClienteEntity>(), It.IsAny<decimal>(), It.IsAny<DateTime>()));
         _validatorSuccess
             .Setup(x => x.ValidateEfetuarTransacao(It.IsAny<StatusTransacao>()));
 
         _validatorFail
-            .Setup(x => x.Validate(It.IsAny<LimiteClienteEntity>(), It.IsAny<LimiteClienteEntity>(),
-                It.IsAny<decimal>()))
+            .Setup(x => x.Validate(It.IsAny<LimiteClienteEntity>(), It.IsAny<LimiteClienteEntity>(), It.IsAny<decimal>()))
             .Throws(new EntityValidationException("Erro de validação"));
         _validatorFail
-            .Setup(x => x.ValidateHydration(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<LimiteClienteEntity>(),
-                It.IsAny<LimiteClienteEntity>(), It.IsAny<decimal>(), It.IsAny<DateTime>()))
+            .Setup(x => x.ValidateHydration(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<LimiteClienteEntity>(), It.IsAny<LimiteClienteEntity>(), It.IsAny<decimal>(), It.IsAny<DateTime>()))
             .Throws(new EntityHydrationException("Erro de validação", new SystemException()));
-
-        _validatorFailEfetuarTransacao
-            .Setup(x => x.Validate(It.IsAny<LimiteClienteEntity>(), It.IsAny<LimiteClienteEntity>(), It.IsAny<decimal>()));
-        _validatorFailEfetuarTransacao
-            .Setup(x => x.ValidateEfetuarTransacao(It.IsAny<StatusTransacao>()))
-            .Throws(new TransactionException("Erro de validação", new System.Exception()));
     }
 
     [Fact]
@@ -152,10 +141,11 @@ public class TransacaoEntityTest
     }
 
     [Fact]
-    public void Given_TransacaoEntityInvalida_When_EfetuarTransacao_Then_TransacaoIsRejectedAndThrowTransactionException()
+    public void
+    Given_TransacaoEntityInvalida_When_EfetuarTransacao_Then_TransacaoIsRejectedAndThrowTransactionException()
     {
         // Arrange
-        var valor = -100m;
+        var valor = 10000m;
         var limiteClientePagador = LimiteClienteFixture.LimiteClienteValido("1");
         var limiteClienteRecebedor = LimiteClienteFixture.LimiteClienteValido("2");
         var transacao = TransacaoEntity.Create(

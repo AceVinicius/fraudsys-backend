@@ -137,4 +137,29 @@ public class TransacaoValidatorTest
         // Assert
         Assert.Throws<EntityValidationException>(act);
     }
+
+    [Fact]
+    public void Given_StatusTransacao_When_ValidateStatusTransacao_Then_NotThrowException()
+    {
+        // Arrange
+        var status = StatusTransacao.Pendente;
+
+        // Act
+        TransacaoValidator.ValidateStatusTransacao(status);
+
+        // Assert
+    }
+
+    [Fact]
+    public void Given_StatusTransacaoErrado_When_ValidateStatusTransacao_Then_ThrowException()
+    {
+        // Arrange
+        var status = StatusTransacao.Aprovada;
+
+        // Act
+        var act = () => TransacaoValidator.ValidateStatusTransacao(status);
+
+        // Assert
+        Assert.Throws<EntityValidationException>(act);
+    }
 }

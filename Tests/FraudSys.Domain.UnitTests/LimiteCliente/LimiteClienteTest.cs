@@ -31,6 +31,10 @@ public class LimiteClienteTest
         _validatorFail
             .Setup(x => x.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<decimal>()))
             .Throws(new EntityValidationException("Erro de validação"));
+        _validatorFail
+            .Setup(x => x.ValidateHydration(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It
+                .IsAny<decimal>()))
+            .Throws(new EntityHydrationException("Erro de validação", new System.Exception()));
 
         _validatorFailAtualizacaoLimite
             .Setup(x => x.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<decimal>()));
@@ -128,7 +132,7 @@ public class LimiteClienteTest
             fix.LimiteTransacao);
 
         // Assert
-        Assert.Throws<EntityValidationException>(act);
+        Assert.Throws<EntityHydrationException>(act);
     }
 
     [Fact]

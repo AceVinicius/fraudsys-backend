@@ -20,18 +20,16 @@ public class RemoverLimiteUseCase : IRemoverLimiteUseCase
         RemoverLimiteInput input,
         CancellationToken cancellationToken)
     {
-        _appLogger.LogInformation("Removendo limiteClienteEntity");
+        _appLogger.LogInformation($"Iniciando use case de remoção do LimiteCliente '{input.Documento}'.");
 
         var limiteCliente = await _limiteClienteRepository.GetByIdAsync(
             input.Documento,
             cancellationToken);
 
-        _appLogger.LogInformation("O limiteClienteEntity foi encontrado");
-
         await _limiteClienteRepository.DeleteAsync(limiteCliente.Documento, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        _appLogger.LogInformation("Limite removido com sucesso");
+        _appLogger.LogInformation("LimiteCliente remoção com sucesso.");
 
         return new RemoverLimiteOutput(limiteCliente);
     }

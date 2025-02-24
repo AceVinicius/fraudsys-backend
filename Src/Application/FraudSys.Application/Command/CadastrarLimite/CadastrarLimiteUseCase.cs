@@ -3,19 +3,19 @@ namespace FraudSys.Application.Command.CadastrarLimite;
 public class CadastrarLimiteUseCase : ICadastrarLimiteUseCase
 {
     private readonly IAppLogger<CadastrarLimiteUseCase> _appLogger;
-    private readonly ILimiteClienteRepository _limiteClienteRepository;
     private readonly ILimiteClienteValidatorFacade _validatorFacade;
+    private readonly ILimiteClienteRepository _limiteClienteRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public CadastrarLimiteUseCase(
         IAppLogger<CadastrarLimiteUseCase> appLogger,
-        ILimiteClienteRepository limiteClienteRepository,
         ILimiteClienteValidatorFacade validatorFacade,
+        ILimiteClienteRepository limiteClienteRepository,
         IUnitOfWork unitOfWork)
     {
         _appLogger = appLogger;
-        _limiteClienteRepository = limiteClienteRepository;
         _validatorFacade = validatorFacade;
+        _limiteClienteRepository = limiteClienteRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -23,7 +23,7 @@ public class CadastrarLimiteUseCase : ICadastrarLimiteUseCase
         CadastrarLimiteInput input,
         CancellationToken cancellationToken)
     {
-        _appLogger.LogInformation($"Cadastrando limite para o cliente {input.Documento}.");
+        _appLogger.LogInformation($"Iniciando o use case para cadastro do LimiteCliente '{input.Documento}'.");
 
         var limiteCliente = LimiteClienteEntity.Create(
             _validatorFacade,
@@ -32,12 +32,10 @@ public class CadastrarLimiteUseCase : ICadastrarLimiteUseCase
             input.NumeroConta,
             input.LimiteTransacao);
 
-        _appLogger.LogInformation($"Criando limite de {input.LimiteTransacao} para o cliente {input.Documento}.");
-
         await _limiteClienteRepository.CreateAsync(limiteCliente, cancellationToken);
         await _unitOfWork.CommitAsync(cancellationToken);
 
-        _appLogger.LogInformation("Limite cadastrado com sucesso.");
+        _appLogger.LogInformation("LimiteCliente cadastrado com sucesso.");
 
         return new CadastrarLimiteOutput(limiteCliente);
     }

@@ -13,7 +13,8 @@ public class BuscarTodasTransacoesUseCase : IBuscarTodasTransacoesUseCase
         _transacaoRepository = transacaoRepository;
     }
 
-    public async Task<BuscarTodasTransacoesOutput> Execute(BuscarTodasTransacoesInput request,
+    public async Task<BuscarTodasTransacoesOutput> Execute(
+        BuscarTodasTransacoesInput input,
         CancellationToken cancellationToken)
     {
         _appLogger.LogInformation("Buscando todos limiteClientes");

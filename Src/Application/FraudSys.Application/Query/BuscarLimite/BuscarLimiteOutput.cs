@@ -15,5 +15,6 @@ public record BuscarLimiteOutput(
             limiteClienteEntity.LimiteTransacao
         )
     {
+
     }
 }
